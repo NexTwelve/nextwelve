@@ -1,0 +1,14 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  // The public pages only (landing, roadmap, architecture), for putting nextwelve.com up before the
+  // database exists: `pnpm run deploy:site`. The demo and the app need the full Worker
+  // (wrangler.jsonc, `pnpm run deploy`), which later replaces this one under the same name.
+  // Forks: change or remove the routes below.
+  "name": "nextwelve-api",
+  "compatibility_date": "2026-09-15",
+  "assets": { "directory": "./public" },
+  "routes": [
+    { "pattern": "nextwelve.com", "custom_domain": true },
+    { "pattern": "www.nextwelve.com", "custom_domain": true }
+  ]
+}

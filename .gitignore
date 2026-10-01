@@ -1,0 +1,72 @@
+# --- Secrets and local configuration: never commit these ---------------------------
+# Real values live in .env / .dev.vars locally and in Wrangler secrets when deployed.
+.env
+.env.*
+!.env.example
+.dev.vars
+.dev.vars.*
+!.dev.vars.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.secret
+*.secrets
+secrets/
+service-account*.json
+*-credentials.json
+
+# --- Dependencies -----------------------------------------------------------------
+node_modules/
+.pnpm-store/
+
+# --- Build output and caches ------------------------------------------------------
+dist/
+build/
+out/
+*.tsbuildinfo
+.cache/
+.turbo/
+.eslintcache
+
+# --- Cloudflare Wrangler (local state, simulated R2 and D1, logs) ------------------
+.wrangler/
+
+# --- Tests ------------------------------------------------------------------------
+coverage/
+test-results/
+playwright-report/
+blob-report/
+
+# --- Logs -------------------------------------------------------------------------
+logs/
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# --- Local databases, dumps and scratch files -------------------------------------
+pgdata/
+*.dump
+*.backup
+tmp/
+*.tmp
+*.local
+
+# --- Packaged deliveries ----------------------------------------------------------
+*.tar.gz
+*.tgz
+*.zip
+
+# --- Operating system and editors -------------------------------------------------
+.DS_Store
+._*
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.swp
+*.swo
+*~

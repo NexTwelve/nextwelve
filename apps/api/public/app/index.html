@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NexTwelve planner</title>
+  <link rel="stylesheet" href="/app/styles.css">
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script type="module" src="/app/app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/">Nex<span>Twelve</span></a>
+    <label class="app-picker" hidden>
+      <span class="sr-only">Application</span>
+      <select id="app-select"></select>
+    </label>
+    <div class="spacer"></div>
+    <span id="user-email" class="muted"></span>
+    <button id="phone-open" class="ghost" type="button" hidden title="Read-only access on your phone, by QR code">View on phone</button>
+    <button id="sign-out" class="ghost" hidden>Sign out</button>
+  </header>
+
+  <dialog id="phone-dialog" class="phone-dialog" aria-labelledby="phone-title">
+    <div class="phone-head">
+      <h2 id="phone-title">View on your phone</h2>
+      <button id="phone-close" class="ghost" type="button" aria-label="Close">&times;</button>
+    </div>
+    <p class="muted">Scan this code with your phone's camera for <strong>read-only</strong> access to the forms and reports you can see. Nothing can be changed from the phone.</p>
+    <div id="phone-qr-box" class="phone-qr-box">
+      <img id="phone-qr" alt="QR code that opens NexTwelve on your phone" width="232" height="232">
+      <p id="phone-qr-note" class="muted"></p>
+    </div>
+    <form id="phone-approve" class="phone-approve" hidden>
+      <p><strong id="phone-device"></strong> wants read-only access as you.</p>
+      <label for="phone-match">Type the number shown on the phone</label>
+      <input id="phone-match" inputmode="numeric" pattern="[0-9]{2}" maxlength="2" autocomplete="off" required>
+      <div class="phone-actions">
+        <button class="primary" type="submit">Allow</button>
+        <button id="phone-deny" class="ghost" type="button">Deny</button>
+      </div>
+    </form>
+    <p id="phone-status" class="status" role="status" aria-live="polite"></p>
+    <button id="phone-new" class="ghost" type="button" hidden>Show a new code</button>
+    <div id="phone-list-box" hidden>
+      <h3>Connected phones</h3>
+      <ul id="phone-list" class="phone-list"></ul>
+    </div>
+    <p class="muted small">Access lasts 8 hours at most and ends as soon as you disconnect the phone here.</p>
+  </dialog>
+
+  <div id="demo-bar" class="demo-bar" hidden>
+    <strong>Demo copy</strong>
+    <span id="demo-left" class="muted"></span>
+    <label>View as <select id="demo-persona"></select></label>
+    <span id="demo-persona-note" class="muted"></span>
+    <div class="spacer"></div>
+    <button id="demo-restart" class="ghost" title="Delete this copy and start with a fresh one">Start over</button>
+    <button id="demo-exit" class="ghost" title="Delete this copy and go back to the home page">Leave</button>
+  </div>
+
+  <section id="sign-in" class="sign-in" hidden>
+    <h1>Sign in to NexTwelve</h1>
+    <p class="muted">Use the Google account your administrator invited.</p>
+    <div id="google-button"></div>
+    <p id="sign-in-error" class="error" role="alert"></p>
+    <p class="muted">Just looking? <a href="/#demo">Try the demo</a>, no account needed.</p>
+  </section>
+
+  <div id="workspace" class="workspace" hidden>
+    <nav class="sidebar" aria-label="Forms">
+      <div id="form-list"></div>
+    </nav>
+    <main class="main">
+      <div id="empty" class="empty muted">Pick a form on the left.</div>
+      <article id="import-view" hidden>
+        <h1>Import a file</h1>
+        <p class="muted">Upload a CSV or .xlsx export, check it against the format's mapping rules, then load it. Nothing loads while any line is rejected unless you choose to load the valid lines.</p>
+        <div class="page">
+          <label>Import format <select id="imp-format"></select></label>
+          <label>Mode
+            <select id="imp-mode">
+              <option value="merge">Merge: overwrite the cells in the file</option>
+              <option value="replace">Replace: also clear cells the file no longer has</option>
+              <option value="accumulate">Accumulate: add to existing values</option>
+            </select>
+          </label>
+          <label>File <input id="imp-file" type="file" accept=".csv,.tsv,.txt,.xlsx"></label>
+          <label class="check"><input id="imp-partial" type="checkbox"> Load valid lines even if some are rejected</label>
+        </div>
+        <div class="toolbar">
+          <button id="imp-validate" class="ghost">Validate</button>
+          <button id="imp-load" class="primary">Load</button>
+          <span id="imp-status" class="status" role="status" aria-live="polite"></span>
+        </div>
+        <div id="imp-result" hidden>
+          <dl id="imp-counts" class="counts"></dl>
+          <div id="imp-errors-wrap" class="grid-wrap compact" hidden><table id="imp-errors" class="grid list"></table></div>
+        </div>
+        <h2>Recent imports</h2>
+        <div class="grid-wrap compact"><table id="imp-runs" class="grid list"></table></div>
+      </article>
+      <article id="datasets-view" hidden>
+        <h1>Datasets</h1>
+        <p class="muted">Workbooks kept as reference data. Each upload becomes a new version; mapping rules use the current version, and every import records which version it used.</p>
+        <div class="page">
+          <label>Dataset <select id="ds-select"></select></label>
+          <label>Sheet <select id="ds-sheet"></select></label>
+          <label>New version or new dataset <input id="ds-file" type="file" accept=".csv,.xlsx"></label>
+          <label>Name <input id="ds-name" type="text" placeholder="Dataset name"></label>
+        </div>
+        <div class="toolbar">
+          <button id="ds-publish" class="primary">Publish</button>
+          <span id="ds-status" class="status" role="status" aria-live="polite"></span>
+        </div>
+        <div class="grid-wrap compact"><table id="ds-rows" class="grid list"></table></div>
+      </article>
+      <article id="backups-view" hidden>
+        <h1>Backups and restore</h1>
+        <p class="muted">Every restore is written as one change, so it can be undone like any other. Restoring a snapshot over this application first takes a pre-restore snapshot.</p>
+
+        <h2>Put a slice back to an earlier point</h2>
+        <p class="muted">Rebuilt from the cell history: choose a slice and a moment, preview what would change, then restore.</p>
+        <div class="page">
+          <label>Cube <select id="pit-cube"></select></label>
+          <label>Scenario <select id="pit-scenario"></select></label>
+          <label>Version <select id="pit-version"></select></label>
+          <label><span id="pit-filter-label">Only for</span> <select id="pit-filter"></select></label>
+        </div>
+        <div class="page">
+          <label>As it was
+            <select id="pit-mode">
+              <option value="at">at a date and time</option>
+              <option value="before">just before a change</option>
+            </select>
+          </label>
+          <label id="pit-at-wrap">Date and time <input id="pit-at" type="datetime-local" step="1"></label>
+          <label id="pit-txn-wrap" hidden>Change <select id="pit-txn"></select></label>
+          <label>Restore into <select id="pit-target"></select></label>
+          <label id="pit-new-wrap" hidden>New version name <input id="pit-new" type="text" placeholder="e.g. Restored 1 Oct"></label>
+        </div>
+        <div class="toolbar">
+          <button id="pit-preview" class="ghost">Preview</button>
+          <button id="pit-run" class="primary" disabled>Restore</button>
+          <button id="pit-undo" class="ghost" hidden>Undo this restore</button>
+          <span id="pit-status" class="status" role="status" aria-live="polite"></span>
+        </div>
+        <dl id="pit-counts" class="counts" hidden></dl>
+        <div id="pit-skipped-wrap" class="grid-wrap compact" hidden><table id="pit-skipped" class="grid list"></table></div>
+
+        <h2>Put metadata back</h2>
+        <p class="muted">Dimensions and members, forms and reports as they were at a moment, or as a snapshot holds them. Members deleted since come back; renames, moves and property changes are undone; members added since are removed unless they hold data, which stays. A pre-restore snapshot is taken first.</p>
+        <div class="page">
+          <label>From
+            <select id="meta-source">
+              <option value="at">a date and time</option>
+              <option value="snapshot">a snapshot</option>
+            </select>
+          </label>
+          <label id="meta-at-wrap">Date and time <input id="meta-at" type="datetime-local" step="1"></label>
+          <label id="meta-deploy-wrap">or just before <select id="meta-deploy"></select></label>
+          <label id="meta-snap-wrap" hidden>Snapshot <select id="meta-snap"></select></label>
+          <label>Dimensions <select id="meta-dims"></select></label>
+        </div>
+        <div class="page">
+          <label class="check"><input id="meta-members" type="checkbox" checked> Members</label>
+          <label class="check"><input id="meta-defs" type="checkbox" checked> Forms and reports</label>
+          <label class="check"><input id="meta-remove-new" type="checkbox"> Remove forms and reports created since</label>
+          <label class="check"><input id="meta-data" type="checkbox"> Data too</label>
+        </div>
+        <div class="toolbar">
+          <button id="meta-preview" class="ghost">Preview</button>
+          <button id="meta-run" class="primary" disabled>Restore</button>
+          <span id="meta-status" class="status" role="status" aria-live="polite"></span>
+        </div>
+        <p id="meta-history" class="muted"></p>
+        <div id="meta-result" class="meta-result" hidden></div>
+
+        <h2>Snapshots</h2>
+        <p class="muted">A copy of the whole application (dimensions, security, forms, imports, datasets and data) kept in storage. One is taken every night when something changed.</p>
+        <div class="page">
+          <label>Comment <input id="snap-comment" class="wide" type="text" placeholder="Optional, e.g. before the reforecast"></label>
+        </div>
+        <div class="toolbar">
+          <button id="snap-take" class="primary">Take a snapshot</button>
+          <span id="snap-status" class="status" role="status" aria-live="polite"></span>
+        </div>
+        <div class="grid-wrap compact"><table id="snap-list" class="grid list"></table></div>
+        <section id="snap-restore" class="panel" hidden>
+          <h2 id="snap-restore-title">Restore</h2>
+          <div class="page">
+            <label>Restore to
+              <select id="snap-target">
+                <option value="in_place">this application (data only)</option>
+                <option value="new_app">a new application</option>
+              </select>
+            </label>
+            <label class="in-place">Versions <select id="snap-versions"></select></label>
+            <label class="in-place">Into version <select id="snap-into"></select></label>
+            <label class="new-app" hidden>New application name <input id="snap-name" type="text"></label>
+            <label class="new-app check" hidden><input id="snap-access" type="checkbox"> Copy roles and member access from the snapshot</label>
+          </div>
+          <div class="toolbar">
+            <button id="snap-preview" class="ghost">Preview</button>
+            <button id="snap-run" class="primary" disabled>Restore</button>
+            <button id="snap-undo" class="ghost" hidden>Undo this restore</button>
+            <button id="snap-close" class="ghost">Close</button>
+            <span id="snap-restore-status" class="status" role="status" aria-live="polite"></span>
+          </div>
+          <dl id="snap-counts" class="counts" hidden></dl>
+          <p id="snap-skipped" class="muted" hidden></p>
+        </section>
+      </article>
+      <article id="report-view" hidden>
+        <div class="form-head">
+          <div>
+            <h1 id="report-title"></h1>
+            <p id="report-desc" class="muted"></p>
+          </div>
+          <span class="badge">Report</span>
+        </div>
+        <div id="report-page" class="page"></div>
+        <div class="toolbar">
+          <button id="report-refresh" class="ghost">Refresh</button>
+          <button id="report-xlsx" class="primary">Download Excel</button>
+          <button id="report-csv" class="ghost">Download CSV</button>
+          <span id="report-status" class="status" role="status" aria-live="polite"></span>
+        </div>
+        <p id="report-note" class="muted"></p>
+        <div class="grid-wrap"><table id="report-grid" class="grid report"></table></div>
+      </article>
+      <article id="defs-view" hidden>
+        <h1>Form and report definitions</h1>
+        <p class="muted">Export every form and report to Excel (or CSV), edit the Definitions and Layout sheets, and import the file back. The import is checked first; nothing changes while any row has a problem.</p>
+        <div class="toolbar">
+          <button id="defs-xlsx" class="primary">Export to Excel</button>
+          <button id="defs-csv" class="ghost">Export as CSV (zip)</button>
+          <span id="defs-export-status" class="status" role="status" aria-live="polite"></span>
+        </div>
+        <h2>Import</h2>
+        <div class="page">
+          <label>Workbook, zip, or the CSV files <input id="defs-file" type="file" accept=".xlsx,.zip,.csv" multiple></label>
+        </div>
+        <div class="toolbar">
+          <button id="defs-check" class="ghost">Check</button>
+          <button id="defs-import" class="primary" disabled>Import</button>
+          <span id="defs-status" class="status" role="status" aria-live="polite"></span>
+        </div>
+        <div id="defs-result" hidden>
+          <dl id="defs-counts" class="counts"></dl>
+          <div id="defs-changes-wrap" class="grid-wrap compact"><table id="defs-changes" class="grid list"></table></div>
+          <div id="defs-errors-wrap" class="grid-wrap compact" hidden><table id="defs-errors" class="grid list"></table></div>
+        </div>
+        <h2>Version history</h2>
+        <p class="muted">Every saved version of a form or report is kept, including deleted ones. Bring one back to make it the current version.</p>
+        <div class="page">
+          <label>Definition <select id="defs-hist-name"></select></label>
+          <label>or a deleted one by name <input id="defs-hist-other" type="text" placeholder="Form or report name"></label>
+          <label>Type
+            <select id="defs-hist-type">
+              <option value="forms">Form</option>
+              <option value="reports">Report</option>
+            </select>
+          </label>
+          <button id="defs-hist-load" class="ghost">Show history</button>
+        </div>
+        <span id="defs-hist-status" class="status" role="status" aria-live="polite"></span>
+        <div class="grid-wrap compact"><table id="defs-hist" class="grid list"></table></div>
+      </article>
+      <article id="form-view" hidden>
+        <div class="form-head">
+          <div>
+            <h1 id="form-title"></h1>
+            <p id="form-desc" class="muted"></p>
+          </div>
+          <span id="form-badge" class="badge" hidden>Read-only</span>
+        </div>
+        <p id="form-instructions" class="instructions" hidden></p>
+        <div id="page" class="page"></div>
+        <div class="toolbar">
+          <button id="save" class="primary" disabled>Save</button>
+          <button id="discard" class="ghost" disabled>Discard changes</button>
+          <button id="refresh" class="ghost">Refresh</button>
+          <button id="history" class="ghost" disabled>Cell history</button>
+          <span id="status" class="status" role="status" aria-live="polite"></span>
+        </div>
+        <div id="conflicts" class="conflicts" hidden>
+          <p><strong>Someone else changed the outlined cells after you opened the form.</strong> Hover over one to see their value.</p>
+          <button id="overwrite" class="danger">Save mine anyway</button>
+          <button id="take-theirs" class="ghost">Reload theirs</button>
+        </div>
+        <div class="grid-wrap"><table id="grid" class="grid"></table></div>
+        <p class="hint muted">Enter, Tab and the arrow keys move between cells. Paste a block copied from Sheets or Excel into any writable cell.</p>
+      </article>
+    </main>
+    <aside id="history-panel" class="history" hidden>
+      <div class="history-head">
+        <h2>Cell history</h2>
+        <button id="history-close" class="ghost" aria-label="Close history">Close</button>
+      </div>
+      <p id="history-cell" class="muted"></p>
+      <ol id="history-list"></ol>
+    </aside>
+  </div>
+</body>
+</html>

@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NexTwelve roadmap: from MVP to general availability</title>
+  <meta name="description" content="The NexTwelve product roadmap: what has shipped, what comes next for planners, modeling, enterprise readiness, and what 1.0 means.">
+  <link rel="stylesheet" href="/landing.css">
+</head>
+<body>
+  <header class="site-head">
+    <a class="brand" href="/">Nex<span>Twelve</span></a>
+    <nav aria-label="Main">
+      <a href="/#demo">Demo</a>
+      <a href="/roadmap" aria-current="page">Roadmap</a>
+      <a href="/architecture">Architecture</a>
+      <a href="/#open-source">Self-host</a>
+      <a href="https://github.com/NexTwelve" class="gh" rel="noopener">GitHub</a>
+      <a href="/app/" class="signin">Sign in</a>
+    </nav>
+    <a href="/app/" class="signin signin-m">Sign in</a>
+  </header>
+
+  <main class="doc">
+    <section class="page-hero">
+      <p class="eyebrow">Product roadmap</p>
+      <h1>From a working MVP to a market-ready planning platform</h1>
+      <p class="lead">NexTwelve already runs a real operating plan end to end: the model, forms, reports, GL imports, security, audit and restore. The road to 1.0 adds what finance teams need to run their whole planning cycle in it, and what IT and security teams need to approve it for production.</p>
+      <p class="note">Target dates are indicative and will move with what early teams tell us. The project is open source: follow along, or help shape it, on <a href="https://github.com/NexTwelve" rel="noopener">GitHub</a>.</p>
+    </section>
+
+    <section aria-labelledby="glance">
+      <h2 id="glance" class="sr-only">At a glance</h2>
+      <ol class="timeline">
+        <li class="shipped"><span class="dot" aria-hidden="true">&#10003;</span><span class="badge shipped">Shipped</span><a href="#foundation">Foundation</a><small>MVP, available now</small></li>
+        <li class="next"><span class="dot" aria-hidden="true">1</span><span class="badge next">Next</span><a href="#phase-1">Planner experience</a><small>Target Q1 2027</small></li>
+        <li><span class="dot" aria-hidden="true">2</span><span class="badge planned">Planned</span><a href="#phase-2">Modeling power</a><small>Target Q2 2027</small></li>
+        <li><span class="dot" aria-hidden="true">3</span><span class="badge planned">Planned</span><a href="#phase-3">Enterprise readiness</a><small>Target Q3 2027</small></li>
+        <li><span class="dot" aria-hidden="true">4</span><span class="badge planned">Planned</span><a href="#phase-4">General availability</a><small>NexTwelve 1.0, target Q4 2027</small></li>
+      </ol>
+    </section>
+
+    <section>
+      <article class="phase" id="foundation">
+        <header><span class="badge shipped">Shipped</span><span class="when">Available now</span></header>
+        <h2>Foundation</h2>
+        <p class="outcome">A company's full operating plan runs in NexTwelve, and every change is audited, explainable and recoverable.</p>
+        <div class="cols">
+          <div>
+            <h3>What shipped</h3>
+            <ul class="ticks">
+              <li>Dimensional model: scenarios, versions, years, periods, entities, accounts, departments and up to eight custom dimensions, with hierarchies that add, subtract or ignore</li>
+              <li>Data-entry forms with page choices, up to three dimensions per axis, paste from Excel, and conflict detection before anything is saved</li>
+              <li>Reports with empty rows hidden, units, thousands or millions, and downloads to Excel or CSV</li>
+              <li>GL imports through mapping rules and crosswalk workbooks, with drill-back from any cell to its source lines</li>
+              <li>Roles, member-level read and write access, and plan windows that close periods</li>
+              <li>A cell-level audit trail on a hash chain, undo, and point-in-time restore of data and metadata</li>
+              <li>Snapshots, nightly backups with retention, and restore into a new application</li>
+              <li>Form and report definitions exported to and imported from Excel or CSV</li>
+              <li>Read-only access on a phone, paired by QR code and approved on the computer</li>
+              <li>A public demo where each visitor gets an isolated copy of a sample company</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Proven by</h3>
+            <ul class="ticks">
+              <li>500+ automated tests against a real Postgres <span>(about 390 of them adversarial: isolation, injection, tampering, races, failures)</span></li>
+              <li>A sample company of about 27,500 cells, with forms, reports and a month of actuals loaded from a GL export</li>
+              <li>Tenant isolation enforced inside the database, not only in the API</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <article class="phase" id="phase-1">
+        <header><span class="badge next">Next</span><span class="when">Phase 1 &middot; Target Q1 2027</span></header>
+        <h2>Planner experience</h2>
+        <p class="outcome">Planners do their day-to-day work in Google Sheets or the browser, without waiting on an administrator.</p>
+        <div class="cols">
+          <div>
+            <h3>What ships</h3>
+            <ul class="ticks">
+              <li>Google Sheets add-on: open a form in a sheet, refresh, submit and see cell history, under the same security and audit trail as the browser</li>
+              <li>Spreading: enter a quarter or year total and spread it evenly, like last year, or by a seasonality profile</li>
+              <li>Cell comments and supporting detail: the line items behind a planned number</li>
+              <li>Time balance, so balances and headcount show the last period instead of a sum</li>
+              <li>Variance columns in forms and reports: actual against budget or forecast, as an amount and a percentage</li>
+              <li>Guided first steps and in-app help for planners</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Done when</h3>
+            <ul class="ticks muted">
+              <li>A finance team completes a full budget cycle in Sheets</li>
+              <li>Sheets and the browser show identical numbers for every form in the sample company</li>
+              <li>A new planner finishes the common tasks without help</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <article class="phase" id="phase-2">
+        <header><span class="badge planned">Planned</span><span class="when">Phase 2 &middot; Target Q2 2027</span></header>
+        <h2>Modeling power</h2>
+        <p class="outcome">Driver-based plans calculate themselves, and models with several currencies and many entities roll up correctly.</p>
+        <div class="cols">
+          <div>
+            <h3>What ships</h3>
+            <ul class="ticks">
+              <li>Calculation rules: member formulas and a rules language for price &times; volume, ratios and allocations, with lookups into reference workbooks</li>
+              <li>Allocations by driver: headcount, revenue, floor space</li>
+              <li>Multi-currency: rates by scenario and period, translation to a reporting currency</li>
+              <li>Intercompany eliminations in consolidation</li>
+              <li>Workforce planning: positions, salaries, benefits and taxes flowing into operating expenses</li>
+              <li>Copy a version and run what-if scenarios side by side</li>
+              <li>Large imports, snapshots and restores run as background jobs with progress</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Done when</h3>
+            <ul class="ticks muted">
+              <li>Rules recalculate the sample company's plan in seconds, and every calculated change is audited like an entered one</li>
+              <li>Currency translation and eliminations reconcile to a hand-built reference model</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <article class="phase" id="phase-3">
+        <header><span class="badge planned">Planned</span><span class="when">Phase 3 &middot; Target Q3 2027</span></header>
+        <h2>Enterprise readiness</h2>
+        <p class="outcome">An IT and security team can approve NexTwelve for company-wide use.</p>
+        <div class="cols">
+          <div>
+            <h3>What ships</h3>
+            <ul class="ticks">
+              <li>Approvals: submit, review and approve by entity or department, with locks and an approval trail</li>
+              <li>Single sign-on beyond Google: Microsoft Entra ID and Okta, with automatic user provisioning (SCIM)</li>
+              <li>Scheduled connectors for NetSuite, QuickBooks Online, Xero and Sage Intacct, and exports to Snowflake and BigQuery</li>
+              <li>An Excel add-in alongside the Sheets add-on</li>
+              <li>A long-term audit archive, with the head of the hash chain anchored outside the database</li>
+              <li>An admin console: users, jobs, storage and health</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Done when</h3>
+            <ul class="ticks muted">
+              <li>An independent penetration test leaves no open high or critical findings</li>
+              <li>Security and operating controls are documented against SOC 2 criteria</li>
+              <li>Restore drills run on a schedule and pass</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <article class="phase" id="phase-4">
+        <header><span class="badge planned">Planned</span><span class="when">Phase 4 &middot; Target Q4 2027</span></header>
+        <h2>General availability: NexTwelve 1.0</h2>
+        <p class="outcome">Any finance team can deploy, run and upgrade NexTwelve on its own infrastructure with confidence.</p>
+        <div class="cols">
+          <div>
+            <h3>What ships</h3>
+            <ul class="ticks">
+              <li>A stable, versioned public API with a published deprecation policy</li>
+              <li>One-command deployment to Cloudflare and managed Postgres, and tested upgrades between releases</li>
+              <li>A documentation site: administrator, planner and developer guides</li>
+              <li>Starter models for SaaS, manufacturing, professional services and nonprofits</li>
+              <li>Accessibility to WCAG 2.2 AA in the browser app</li>
+              <li>Published performance and scale targets, checked on every release</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Done when</h3>
+            <ul class="ticks muted">
+              <li>Every release criterion below is met</li>
+              <li>Several organizations run NexTwelve in production</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="criteria" aria-labelledby="criteria">
+      <h2 id="criteria">What 1.0 means</h2>
+      <p class="intro">The release criteria for general availability. Each is a check that passes or fails, not an aspiration.</p>
+      <div class="cards c3">
+        <div class="card"><h3>Secure</h3><p>Independent penetration test passed; tenant isolation enforced in the database; dependencies scanned on every build.</p></div>
+        <div class="card"><h3>Recoverable</h3><p>Nightly snapshots plus point-in-time restore from the audit trail; scheduled restore drills that prove both work.</p></div>
+        <div class="card"><h3>Fast</h3><p>Published targets for opening forms, saving and loading data at realistic model sizes, tested before each release.</p></div>
+        <div class="card"><h3>Documented</h3><p>Guides for administrators, planners and developers, plus a complete API reference.</p></div>
+        <div class="card"><h3>Upgradable</h3><p>Semantic versioning, database migrations tested from every supported release, and release notes for each one.</p></div>
+        <div class="card"><h3>Open</h3><p>A public issue tracker, a contribution guide and a regular release cadence.</p></div>
+      </div>
+    </section>
+
+    <section aria-labelledby="principles">
+      <h2 id="principles">How we build</h2>
+      <div class="cards c4">
+        <div class="card"><h3>One audited write path</h3><p>Every change, entered, imported, calculated or restored, goes through the same checks and lands in the same audit trail.</p></div>
+        <div class="card"><h3>Self-hosted first</h3><p>Open source and free to deploy on your own infrastructure; your plan stays in a database you control.</p></div>
+        <div class="card"><h3>Tested like an adversary would</h3><p>Each feature ships with tests that try to break it: other tenants, bad input, races and failures.</p></div>
+        <div class="card"><h3>Spreadsheet-friendly</h3><p>Data, definitions and reports move in and out of Excel and Sheets without losing anything.</p></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="callout">
+        <div>
+          <h2>Tell us what to build next</h2>
+          <p>Open an issue or a discussion, or fork the project and send a pull request.</p>
+        </div>
+        <a class="button primary big" href="https://github.com/NexTwelve" rel="noopener">NexTwelve on GitHub</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-foot">
+    <span>&copy; 2026 NexTwelve</span>
+    <span class="muted">Open source under the Apache License 2.0. Target dates are indicative.</span>
+    <span class="foot-links">
+      <a href="/">Home</a>
+      <a href="/architecture">Architecture</a>
+      <a href="https://github.com/NexTwelve" rel="noopener">GitHub</a>
+      <a href="/app/">Sign in</a>
+    </span>
+  </footer>
+</body>
+</html>

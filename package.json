@@ -1,0 +1,33 @@
+{
+  "name": "nextwelve",
+  "private": true,
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "description": "Sheets-native EPM: planning engine in Postgres with Google Sheets as the grid",
+  "type": "module",
+  "packageManager": "pnpm@10.28.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "deploy:site": "pnpm --filter @nextwelve/api deploy:site",
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck",
+    "db:bootstrap": "pnpm --filter @nextwelve/db bootstrap",
+    "db:migrate": "pnpm --filter @nextwelve/db migrate",
+    "db:job-key": "pnpm --filter @nextwelve/db job-key",
+    "dev": "pnpm --filter @nextwelve/api dev",
+    "test": "pnpm -r test",
+    "provision": "pnpm --filter @nextwelve/api provision",
+    "seed:sample": "pnpm --filter @nextwelve/api seed:sample",
+    "deploy": "pnpm --filter @nextwelve/api run deploy",
+    "demo:template": "pnpm --filter @nextwelve/api demo:template"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.4",
+    "@types/pg": "^8.23.1",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.3",
+    "vitest": "^5.0.3"
+  }
+}

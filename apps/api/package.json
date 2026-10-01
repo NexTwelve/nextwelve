@@ -1,0 +1,31 @@
+{
+  "name": "@nextwelve/api",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "private": true,
+  "type": "module",
+  "main": "dist/server.js",
+  "scripts": {
+    "deploy:site": "wrangler deploy --config wrangler.site.jsonc",
+    "build": "tsc -p tsconfig.json --noEmit",
+    "typecheck": "tsc -p tsconfig.test.json",
+    "dev": "wrangler dev",
+    "test": "vitest run",
+    "provision": "tsx --env-file=../../.env scripts/provision-tenant.ts",
+    "seed:sample": "tsx --env-file=../../.env scripts/seed-sample.ts",
+    "deploy": "wrangler deploy",
+    "demo:template": "tsx --env-file=../../.env scripts/demo-template.ts"
+  },
+  "dependencies": {
+    "@nextwelve/db": "workspace:*",
+    "fflate": "0.8.3",
+    "hono": "^4.13.12",
+    "jose": "^6.2.12",
+    "pg": "^8.23.1",
+    "uqr": "^0.1.3",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "wrangler": "^4.145.0"
+  }
+}

@@ -1,0 +1,9 @@
+NexTwelve
+Copyright 2026 The NexTwelve Authors
+
+Licensed under the Apache License, Version 2.0 (see LICENSE).
+
+NexTwelve does not include third-party source code in this repository. Its
+dependencies are installed from npm under their own licenses (MIT, ISC,
+Apache-2.0 and similar permissive licenses for everything the Worker ships).
+Fernhollow Foods, the sample company, is fictional; its data is generated.

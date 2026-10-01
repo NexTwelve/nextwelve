@@ -1,0 +1,53 @@
+:root {
+  --bg: #f6f7f9; --panel: #ffffff; --ink: #1d2330; --muted: #5f6b7a; --line: #dfe3ea;
+  --accent: #1f6f5c; --accent-ink: #ffffff; --accent-soft: #e3f1ed; --parent: #f1f3f6; --danger: #b42318;
+  font: 16px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #12151b; --panel: #1a1e26; --ink: #e6e9ef; --muted: #98a2b3; --line: #2c323d;
+    --accent: #4cc3a2; --accent-ink: #0d1a16; --accent-soft: #173229; --parent: #20252f; --danger: #ff6b5f;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); -webkit-text-size-adjust: 100%; }
+[hidden] { display: none !important; }
+.muted { color: var(--muted); }
+.small { font-size: 14px; }
+.bar { position: sticky; top: 0; z-index: 2; display: flex; align-items: center; gap: 10px; padding: 12px 16px; padding-top: max(12px, env(safe-area-inset-top));
+  background: var(--panel); border-bottom: 1px solid var(--line); }
+.brand { font-weight: 700; font-size: 18px; color: var(--ink); text-decoration: none; }
+.brand span { color: var(--accent); }
+.ro { font-size: 12px; font-weight: 650; text-transform: uppercase; letter-spacing: .04em; color: var(--accent); background: var(--accent-soft); border-radius: 999px; padding: 2px 9px; }
+.spacer { flex: 1; }
+button { font: inherit; color: var(--ink); }
+button.link { background: none; border: 0; color: var(--accent); padding: 6px 2px; font-weight: 500; cursor: pointer; }
+main { padding: 16px; padding-bottom: max(24px, env(safe-area-inset-bottom)); max-width: 960px; margin: 0 auto; }
+.screen.center { text-align: center; padding-top: 12vh; }
+h1 { font-size: 22px; margin: 0 0 10px; letter-spacing: -.01em; }
+h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 22px 0 8px; }
+.match { font-size: 72px; font-weight: 750; letter-spacing: .08em; margin: 8px 0 12px; color: var(--accent); font-variant-numeric: tabular-nums; }
+.field { display: block; font-size: 14px; color: var(--muted); }
+select { font: inherit; display: block; width: 100%; margin-top: 4px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); color: var(--ink); }
+.items { list-style: none; margin: 0; padding: 0; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.items li + li { border-top: 1px solid var(--line); }
+.items button { display: flex; width: 100%; align-items: center; justify-content: space-between; gap: 12px; text-align: left; background: none; border: 0; padding: 14px 16px; cursor: pointer; }
+.items button::after { content: "\203A"; color: var(--muted); font-size: 22px; line-height: 1; }
+.items small { display: block; color: var(--muted); font-size: 13px; margin-top: 2px; }
+.view-head { display: flex; justify-content: space-between; margin: -6px 0 6px; }
+.pages { display: grid; gap: 10px; margin: 8px 0; }
+.pages label { font-size: 14px; color: var(--muted); }
+.table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); margin-top: 8px; }
+.table { border-collapse: separate; border-spacing: 0; font-size: 14px; min-width: 100%; }
+.table th, .table td { padding: 8px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+.table thead th { position: sticky; top: 0; background: var(--parent); font-size: 12px; color: var(--muted); text-align: right; font-weight: 600; }
+.table thead th:first-child { text-align: left; }
+.table th[scope="row"] { position: sticky; left: 0; z-index: 1; background: var(--panel); text-align: left; font-weight: 500; max-width: 46vw; overflow: hidden; text-overflow: ellipsis; box-shadow: 1px 0 0 var(--line); }
+.table thead th:first-child { left: 0; z-index: 2; position: sticky; }
+.table td { text-align: right; font-variant-numeric: tabular-nums; }
+.table tr.parent th[scope="row"], .table tr.parent td { font-weight: 650; background: var(--parent); }
+.table tr:last-child th, .table tr:last-child td { border-bottom: 0; }
+.table tr.group th { position: sticky; left: 0; text-align: left; font-size: 13px; font-weight: 650; color: var(--accent); background: var(--accent-soft); padding-top: 10px; }
+.status { min-height: 1.4em; color: var(--muted); font-size: 14px; text-align: center; }
+.status.bad { color: var(--danger); }

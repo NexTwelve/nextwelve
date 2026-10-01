@@ -1,0 +1,1256 @@
+{
+  "company": "Fernhollow Foods",
+  "note": "A fictional company invented for NexTwelve samples. Any resemblance to a real business is coincidental.",
+  "story": "Fernhollow makes small-batch sauces, spice blends and cold-brew coffee concentrates in two US kitchens and through a Canadian co-packer. It sells to grocery chains, restaurants and its own online store, and its fiscal year runs July to June.",
+  "application": "Fernhollow Operating Plan",
+  "dimensions": [
+    {
+      "name": "Scenario",
+      "type": "scenario",
+      "members": [
+        {
+          "name": "Actual"
+        },
+        {
+          "name": "Budget"
+        },
+        {
+          "name": "Forecast"
+        },
+        {
+          "name": "What-If"
+        }
+      ]
+    },
+    {
+      "name": "Version",
+      "type": "version",
+      "members": [
+        {
+          "name": "Working"
+        },
+        {
+          "name": "Final"
+        },
+        {
+          "name": "Upside Case"
+        },
+        {
+          "name": "Downside Case"
+        }
+      ]
+    },
+    {
+      "name": "Years",
+      "type": "years",
+      "members": [
+        {
+          "name": "FY26"
+        },
+        {
+          "name": "FY27"
+        },
+        {
+          "name": "FY28"
+        }
+      ]
+    },
+    {
+      "name": "Period",
+      "type": "period",
+      "members": [
+        {
+          "name": "YearTotal"
+        },
+        {
+          "name": "Q1",
+          "parent": "YearTotal"
+        },
+        {
+          "name": "Q2",
+          "parent": "YearTotal"
+        },
+        {
+          "name": "Q3",
+          "parent": "YearTotal"
+        },
+        {
+          "name": "Q4",
+          "parent": "YearTotal"
+        },
+        {
+          "name": "Jul",
+          "parent": "Q1"
+        },
+        {
+          "name": "Aug",
+          "parent": "Q1"
+        },
+        {
+          "name": "Sep",
+          "parent": "Q1"
+        },
+        {
+          "name": "Oct",
+          "parent": "Q2"
+        },
+        {
+          "name": "Nov",
+          "parent": "Q2"
+        },
+        {
+          "name": "Dec",
+          "parent": "Q2"
+        },
+        {
+          "name": "Jan",
+          "parent": "Q3"
+        },
+        {
+          "name": "Feb",
+          "parent": "Q3"
+        },
+        {
+          "name": "Mar",
+          "parent": "Q3"
+        },
+        {
+          "name": "Apr",
+          "parent": "Q4"
+        },
+        {
+          "name": "May",
+          "parent": "Q4"
+        },
+        {
+          "name": "Jun",
+          "parent": "Q4"
+        }
+      ]
+    },
+    {
+      "name": "Entity",
+      "type": "entity",
+      "secured": true,
+      "members": [
+        {
+          "name": "Fernhollow Consolidated"
+        },
+        {
+          "name": "Fernhollow US",
+          "parent": "Fernhollow Consolidated"
+        },
+        {
+          "name": "Fernhollow Canada",
+          "parent": "Fernhollow Consolidated"
+        },
+        {
+          "name": "Portland Kitchen",
+          "parent": "Fernhollow US"
+        },
+        {
+          "name": "Savannah Kitchen",
+          "parent": "Fernhollow US"
+        },
+        {
+          "name": "Vancouver Co-Pack",
+          "parent": "Fernhollow Canada"
+        }
+      ]
+    },
+    {
+      "name": "Department",
+      "type": "department",
+      "secured": true,
+      "members": [
+        {
+          "name": "All Departments"
+        },
+        {
+          "name": "Operations",
+          "parent": "All Departments"
+        },
+        {
+          "name": "Commercial",
+          "parent": "All Departments"
+        },
+        {
+          "name": "General & Administrative",
+          "parent": "All Departments"
+        },
+        {
+          "name": "No Department",
+          "parent": "All Departments"
+        },
+        {
+          "name": "Production",
+          "parent": "Operations"
+        },
+        {
+          "name": "Quality Assurance",
+          "parent": "Operations"
+        },
+        {
+          "name": "Supply Chain",
+          "parent": "Operations"
+        },
+        {
+          "name": "Sales",
+          "parent": "Commercial"
+        },
+        {
+          "name": "Marketing",
+          "parent": "Commercial"
+        },
+        {
+          "name": "Customer Care",
+          "parent": "Commercial"
+        },
+        {
+          "name": "Finance",
+          "parent": "General & Administrative"
+        },
+        {
+          "name": "People & Culture",
+          "parent": "General & Administrative"
+        },
+        {
+          "name": "Technology",
+          "parent": "General & Administrative"
+        }
+      ]
+    },
+    {
+      "name": "Account",
+      "type": "account",
+      "members": [
+        {
+          "name": "Net Income"
+        },
+        {
+          "name": "Gross Profit",
+          "parent": "Net Income"
+        },
+        {
+          "name": "Net Revenue",
+          "parent": "Gross Profit",
+          "account_type": "revenue"
+        },
+        {
+          "name": "Gross Sales",
+          "parent": "Net Revenue",
+          "account_type": "revenue"
+        },
+        {
+          "name": "Trade Promotions",
+          "parent": "Net Revenue",
+          "agg_op": "-",
+          "account_type": "revenue"
+        },
+        {
+          "name": "Returns & Allowances",
+          "parent": "Net Revenue",
+          "agg_op": "-",
+          "account_type": "revenue"
+        },
+        {
+          "name": "Cost of Goods Sold",
+          "parent": "Gross Profit",
+          "agg_op": "-",
+          "account_type": "expense"
+        },
+        {
+          "name": "Ingredients",
+          "parent": "Cost of Goods Sold",
+          "account_type": "expense"
+        },
+        {
+          "name": "Packaging",
+          "parent": "Cost of Goods Sold",
+          "account_type": "expense"
+        },
+        {
+          "name": "Direct Labor",
+          "parent": "Cost of Goods Sold",
+          "account_type": "expense"
+        },
+        {
+          "name": "Freight & Warehousing",
+          "parent": "Cost of Goods Sold",
+          "account_type": "expense"
+        },
+        {
+          "name": "Operating Expenses",
+          "parent": "Net Income",
+          "agg_op": "-",
+          "account_type": "expense"
+        },
+        {
+          "name": "Salaries & Wages",
+          "parent": "Operating Expenses",
+          "account_type": "expense"
+        },
+        {
+          "name": "Benefits & Payroll Taxes",
+          "parent": "Operating Expenses",
+          "account_type": "expense"
+        },
+        {
+          "name": "Marketing Programs",
+          "parent": "Operating Expenses",
+          "account_type": "expense"
+        },
+        {
+          "name": "Travel & Meals",
+          "parent": "Operating Expenses",
+          "account_type": "expense"
+        },
+        {
+          "name": "Software & Subscriptions",
+          "parent": "Operating Expenses",
+          "account_type": "expense"
+        },
+        {
+          "name": "Facilities & Utilities",
+          "parent": "Operating Expenses",
+          "account_type": "expense"
+        },
+        {
+          "name": "Professional Fees",
+          "parent": "Operating Expenses",
+          "account_type": "expense"
+        },
+        {
+          "name": "Other Income & Expense",
+          "parent": "Net Income"
+        },
+        {
+          "name": "Interest Expense",
+          "parent": "Other Income & Expense",
+          "agg_op": "-",
+          "account_type": "expense"
+        },
+        {
+          "name": "Other Income",
+          "parent": "Other Income & Expense",
+          "account_type": "revenue"
+        },
+        {
+          "name": "Statistics"
+        },
+        {
+          "name": "Cases Sold",
+          "parent": "Statistics",
+          "agg_op": "~",
+          "account_type": "saved_assumption",
+          "time_balance": "flow"
+        },
+        {
+          "name": "Average Price per Case",
+          "parent": "Statistics",
+          "agg_op": "~",
+          "account_type": "saved_assumption",
+          "time_balance": "average"
+        },
+        {
+          "name": "Headcount",
+          "parent": "Statistics",
+          "agg_op": "~",
+          "account_type": "saved_assumption",
+          "time_balance": "last"
+        }
+      ]
+    },
+    {
+      "name": "Product",
+      "type": "custom",
+      "members": [
+        {
+          "name": "All Products"
+        },
+        {
+          "name": "Sauces",
+          "parent": "All Products"
+        },
+        {
+          "name": "Spice Blends",
+          "parent": "All Products"
+        },
+        {
+          "name": "Cold Brew",
+          "parent": "All Products"
+        },
+        {
+          "name": "No Product",
+          "parent": "All Products"
+        },
+        {
+          "name": "Smoked Chipotle Sauce",
+          "parent": "Sauces"
+        },
+        {
+          "name": "Garlic Habanero Sauce",
+          "parent": "Sauces"
+        },
+        {
+          "name": "Tamarind Glaze",
+          "parent": "Sauces"
+        },
+        {
+          "name": "Coastal Rub",
+          "parent": "Spice Blends"
+        },
+        {
+          "name": "Za'atar Blend",
+          "parent": "Spice Blends"
+        },
+        {
+          "name": "Smoky Paprika Rub",
+          "parent": "Spice Blends"
+        },
+        {
+          "name": "Original Concentrate",
+          "parent": "Cold Brew"
+        },
+        {
+          "name": "Oat Vanilla Concentrate",
+          "parent": "Cold Brew"
+        }
+      ]
+    },
+    {
+      "name": "Channel",
+      "type": "custom",
+      "members": [
+        {
+          "name": "All Channels"
+        },
+        {
+          "name": "Grocery",
+          "parent": "All Channels"
+        },
+        {
+          "name": "Foodservice",
+          "parent": "All Channels"
+        },
+        {
+          "name": "Direct to Consumer",
+          "parent": "All Channels"
+        },
+        {
+          "name": "No Channel",
+          "parent": "All Channels"
+        },
+        {
+          "name": "Regional Grocery",
+          "parent": "Grocery"
+        },
+        {
+          "name": "National Grocery",
+          "parent": "Grocery"
+        },
+        {
+          "name": "Online Store",
+          "parent": "Direct to Consumer"
+        },
+        {
+          "name": "Subscription Boxes",
+          "parent": "Direct to Consumer"
+        }
+      ]
+    }
+  ],
+  "cubes": [
+    {
+      "name": "Plan",
+      "dimensions": [
+        "Scenario",
+        "Version",
+        "Years",
+        "Period",
+        "Entity",
+        "Account",
+        "Department",
+        "Product",
+        "Channel"
+      ]
+    }
+  ],
+  "groups": [
+    {
+      "name": "Operations Leads",
+      "grants": [
+        {
+          "dimension": "Department",
+          "member": "Operations",
+          "scope": "idescendants",
+          "access": "write"
+        },
+        {
+          "dimension": "Entity",
+          "member": "Fernhollow Consolidated",
+          "scope": "idescendants",
+          "access": "write"
+        }
+      ]
+    },
+    {
+      "name": "Commercial Leads",
+      "grants": [
+        {
+          "dimension": "Department",
+          "member": "Commercial",
+          "scope": "idescendants",
+          "access": "write"
+        },
+        {
+          "dimension": "Department",
+          "member": "No Department",
+          "scope": "member",
+          "access": "write"
+        },
+        {
+          "dimension": "Entity",
+          "member": "Fernhollow Consolidated",
+          "scope": "idescendants",
+          "access": "write"
+        }
+      ]
+    },
+    {
+      "name": "Finance Team",
+      "grants": [
+        {
+          "dimension": "Department",
+          "member": "All Departments",
+          "scope": "idescendants",
+          "access": "write"
+        },
+        {
+          "dimension": "Entity",
+          "member": "Fernhollow Consolidated",
+          "scope": "idescendants",
+          "access": "write"
+        }
+      ]
+    },
+    {
+      "name": "Canada Viewers",
+      "grants": [
+        {
+          "dimension": "Department",
+          "member": "All Departments",
+          "scope": "idescendants",
+          "access": "read"
+        },
+        {
+          "dimension": "Entity",
+          "member": "Fernhollow Canada",
+          "scope": "idescendants",
+          "access": "read"
+        }
+      ]
+    }
+  ],
+  "plan_windows": [
+    {
+      "scenario": "Actual",
+      "version": "Final",
+      "years": "FY26",
+      "locked": true
+    },
+    {
+      "scenario": "Budget",
+      "version": "Working",
+      "years": "FY27",
+      "locked": false
+    },
+    {
+      "scenario": "Forecast",
+      "version": "Working",
+      "years": "FY27",
+      "start_period": "Jan",
+      "end_period": "Jun",
+      "locked": false
+    }
+  ],
+  "forms": [
+    {
+      "name": "Revenue Inputs by Product",
+      "folder": "Revenue",
+      "cube": "Plan",
+      "description": "Cases, price and gross sales by product and month for one entity and channel.",
+      "definition": {
+        "pov": {
+          "Department": "No Department"
+        },
+        "page": {
+          "Scenario": [
+            "Budget",
+            "Forecast",
+            "What-If"
+          ],
+          "Version": [
+            "Working",
+            "Upside Case",
+            "Downside Case"
+          ],
+          "Years": [
+            "FY27",
+            "FY28"
+          ],
+          "Entity": [
+            "@leaves(Fernhollow Consolidated)"
+          ],
+          "Channel": [
+            "@leaves(Grocery)",
+            "Foodservice",
+            "@leaves(Direct to Consumer)"
+          ],
+          "Account": [
+            "Cases Sold",
+            "Average Price per Case",
+            "Gross Sales"
+          ]
+        },
+        "rows": {
+          "dimension": "Product",
+          "members": [
+            "@idescendants(Sauces)",
+            "@idescendants(Spice Blends)",
+            "@idescendants(Cold Brew)"
+          ]
+        },
+        "columns": {
+          "dimension": "Period",
+          "members": [
+            "@leaves(YearTotal)",
+            "YearTotal"
+          ]
+        },
+        "instructions": "Enter cases and price; update Gross Sales to match until the revenue rule exists."
+      }
+    },
+    {
+      "name": "Department Opex",
+      "folder": "Expenses",
+      "cube": "Plan",
+      "description": "Operating expenses by account and month for one department.",
+      "definition": {
+        "pov": {
+          "Product": "No Product",
+          "Channel": "No Channel"
+        },
+        "page": {
+          "Scenario": [
+            "Budget",
+            "Forecast",
+            "What-If"
+          ],
+          "Version": [
+            "Working",
+            "Upside Case",
+            "Downside Case"
+          ],
+          "Years": [
+            "FY27",
+            "FY28"
+          ],
+          "Entity": [
+            "@leaves(Fernhollow Consolidated)"
+          ],
+          "Department": [
+            "@leaves(Operations)",
+            "@leaves(Commercial)",
+            "@leaves(General & Administrative)"
+          ]
+        },
+        "rows": {
+          "dimension": "Account",
+          "members": [
+            "@idescendants(Operating Expenses)"
+          ]
+        },
+        "columns": {
+          "dimension": "Period",
+          "members": [
+            "@leaves(Q1)",
+            "Q1",
+            "@leaves(Q2)",
+            "Q2",
+            "@leaves(Q3)",
+            "Q3",
+            "@leaves(Q4)",
+            "Q4",
+            "YearTotal"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Headcount by Department",
+      "folder": "Workforce",
+      "cube": "Plan",
+      "description": "Planned headcount (FTE) by department and month.",
+      "definition": {
+        "pov": {
+          "Account": "Headcount",
+          "Product": "No Product",
+          "Channel": "No Channel"
+        },
+        "page": {
+          "Scenario": [
+            "Budget",
+            "Forecast",
+            "What-If"
+          ],
+          "Version": [
+            "Working",
+            "Upside Case",
+            "Downside Case"
+          ],
+          "Years": [
+            "FY27",
+            "FY28"
+          ],
+          "Entity": [
+            "@leaves(Fernhollow Consolidated)"
+          ]
+        },
+        "rows": {
+          "dimension": "Department",
+          "members": [
+            "@idescendants(Operations)",
+            "@idescendants(Commercial)",
+            "@idescendants(General & Administrative)"
+          ]
+        },
+        "columns": {
+          "dimension": "Period",
+          "members": [
+            "@leaves(YearTotal)"
+          ]
+        },
+        "instructions": "Headcount is a month-end count; YearTotal adds months until time balance lands."
+      }
+    },
+    {
+      "name": "P&L Summary",
+      "folder": "Reports",
+      "cube": "Plan",
+      "description": "Read-only P&L by quarter for any entity, scenario and version.",
+      "definition": {
+        "pov": {
+          "Department": "All Departments",
+          "Product": "All Products",
+          "Channel": "All Channels"
+        },
+        "page": {
+          "Scenario": [
+            "Budget",
+            "Actual",
+            "Forecast",
+            "What-If"
+          ],
+          "Version": [
+            "Working",
+            "Final",
+            "Upside Case",
+            "Downside Case"
+          ],
+          "Years": [
+            "FY27",
+            "FY26",
+            "FY28"
+          ],
+          "Entity": [
+            "@idescendants(Fernhollow Consolidated)"
+          ]
+        },
+        "rows": {
+          "dimension": "Account",
+          "members": [
+            "@idescendants(Net Income)"
+          ]
+        },
+        "columns": {
+          "dimension": "Period",
+          "members": [
+            "Q1",
+            "Q2",
+            "Q3",
+            "Q4",
+            "YearTotal"
+          ]
+        },
+        "read_only": true
+      }
+    },
+    {
+      "name": "Channel Mix",
+      "folder": "Reports",
+      "cube": "Plan",
+      "description": "Read-only net revenue by channel and quarter.",
+      "definition": {
+        "pov": {
+          "Account": "Net Revenue",
+          "Department": "No Department",
+          "Product": "All Products"
+        },
+        "page": {
+          "Scenario": [
+            "Budget",
+            "Actual"
+          ],
+          "Version": [
+            "Working",
+            "Final"
+          ],
+          "Years": [
+            "FY27",
+            "FY26"
+          ],
+          "Entity": [
+            "@idescendants(Fernhollow Consolidated)"
+          ]
+        },
+        "rows": {
+          "dimension": "Channel",
+          "members": [
+            "@idescendants(All Channels)"
+          ]
+        },
+        "columns": {
+          "dimension": "Period",
+          "members": [
+            "Q1",
+            "Q2",
+            "Q3",
+            "Q4",
+            "YearTotal"
+          ]
+        },
+        "read_only": true
+      }
+    },
+    {
+      "name": "Opex by Department and Account",
+      "folder": "Expenses",
+      "description": "Two dimensions on rows: each operations department with its expense accounts",
+      "cube": "Plan",
+      "definition": {
+        "pov": {
+          "Channel": "No Channel",
+          "Product": "No Product"
+        },
+        "page": {
+          "Scenario": [
+            "Budget",
+            "Forecast",
+            "What-If"
+          ],
+          "Version": [
+            "Working",
+            "Upside Case",
+            "Downside Case"
+          ],
+          "Years": [
+            "FY27",
+            "FY28"
+          ],
+          "Entity": [
+            "@leaves(Fernhollow Consolidated)"
+          ]
+        },
+        "rows": [
+          {
+            "dimension": "Department",
+            "members": [
+              "@leaves(Operations)"
+            ]
+          },
+          {
+            "dimension": "Account",
+            "members": [
+              "@idescendants(Operating Expenses)"
+            ]
+          }
+        ],
+        "columns": [
+          {
+            "dimension": "Period",
+            "members": [
+              "@leaves(Q1)",
+              "Q1",
+              "@leaves(Q2)",
+              "Q2"
+            ]
+          }
+        ],
+        "read_only": false,
+        "instructions": "Enter monthly budgets by department; quarter totals roll up when you save."
+      }
+    }
+  ],
+  "datasets": [
+    {
+      "name": "Fernhollow Crosswalk",
+      "file": "gl_crosswalk.xlsx",
+      "description": "GL accounts, cost centers and item SKUs mapped to plan members. Maintained by the controller in Excel."
+    }
+  ],
+  "import_formats": [
+    {
+      "name": "ERP GL Actuals",
+      "cube": "Plan",
+      "definition": {
+        "header_row": 1,
+        "dimensions": {
+          "Scenario": {
+            "value": "Actual"
+          },
+          "Version": {
+            "value": "Final"
+          },
+          "Years": {
+            "column": "Fiscal Period"
+          },
+          "Period": {
+            "column": "Fiscal Period"
+          },
+          "Entity": {
+            "column": "Company"
+          },
+          "Department": {
+            "column": "Cost Center"
+          },
+          "Account": {
+            "column": "GL Account"
+          },
+          "Product": {
+            "column": "Item"
+          },
+          "Channel": {
+            "column": "Channel"
+          }
+        },
+        "amount": {
+          "column": "Amount"
+        }
+      },
+      "mappings": [
+        {
+          "dimension": "Entity",
+          "rule_type": "explicit",
+          "source": "PDX01",
+          "target": "Portland Kitchen"
+        },
+        {
+          "dimension": "Entity",
+          "rule_type": "explicit",
+          "source": "SAV01",
+          "target": "Savannah Kitchen"
+        },
+        {
+          "dimension": "Entity",
+          "rule_type": "explicit",
+          "source": "VAN01",
+          "target": "Vancouver Co-Pack"
+        },
+        {
+          "dimension": "Account",
+          "rule_type": "dataset",
+          "source": "Fernhollow Crosswalk",
+          "target": "Plan Account",
+          "options": {
+            "sheet": "GL Accounts",
+            "key_column": "GL Account"
+          }
+        },
+        {
+          "dimension": "Department",
+          "rule_type": "dataset",
+          "source": "Fernhollow Crosswalk",
+          "target": "Department",
+          "options": {
+            "sheet": "Cost Centers",
+            "key_column": "Cost Center"
+          }
+        },
+        {
+          "dimension": "Product",
+          "rule_type": "dataset",
+          "source": "Fernhollow Crosswalk",
+          "target": "Product",
+          "options": {
+            "sheet": "Items",
+            "key_column": "Item"
+          }
+        },
+        {
+          "dimension": "Channel",
+          "rule_type": "explicit",
+          "source": "RGR",
+          "target": "Regional Grocery"
+        },
+        {
+          "dimension": "Channel",
+          "rule_type": "explicit",
+          "source": "NGR",
+          "target": "National Grocery"
+        },
+        {
+          "dimension": "Channel",
+          "rule_type": "explicit",
+          "source": "FSV",
+          "target": "Foodservice"
+        },
+        {
+          "dimension": "Channel",
+          "rule_type": "explicit",
+          "source": "WEB",
+          "target": "Online Store"
+        },
+        {
+          "dimension": "Channel",
+          "rule_type": "explicit",
+          "source": "SUB",
+          "target": "Subscription Boxes"
+        },
+        {
+          "dimension": "Channel",
+          "rule_type": "explicit",
+          "source": "NA",
+          "target": "No Channel"
+        },
+        {
+          "dimension": "Years",
+          "rule_type": "like",
+          "source": "FY26 P*",
+          "target": "FY26"
+        },
+        {
+          "dimension": "Years",
+          "rule_type": "like",
+          "source": "FY27 P*",
+          "target": "FY27"
+        },
+        {
+          "dimension": "Years",
+          "rule_type": "like",
+          "source": "FY28 P*",
+          "target": "FY28"
+        },
+        {
+          "dimension": "Period",
+          "rule_type": "like",
+          "source": "* P01",
+          "target": "Jul"
+        },
+        {
+          "dimension": "Period",
+          "rule_type": "like",
+          "source": "* P02",
+          "target": "Aug"
+        },
+        {
+          "dimension": "Period",
+          "rule_type": "like",
+          "source": "* P03",
+          "target": "Sep"
+        },
+        {
+          "dimension": "Period",
+          "rule_type": "like",
+          "source": "* P04",
+          "target": "Oct"
+        },
+        {
+          "dimension": "Period",
+          "rule_type": "like",
+          "source": "* P05",
+          "target": "Nov"
+        },
+        {
+          "dimension": "Period",
+          "rule_type": "like",
+          "source": "* P06",
+          "target": "Dec"
+        },
+        {
+          "dimension": "Period",
+          "rule_type": "like",
+          "source": "* P07",
+          "target": "Jan"
+        },
+        {
+          "dimension": "Period",
+          "rule_type": "like",
+          "source": "* P08",
+          "target": "Feb"
+        },
+        {
+          "dimension": "Period",
+          "rule_type": "like",
+          "source": "* P09",
+          "target": "Mar"
+        },
+        {
+          "dimension": "Period",
+          "rule_type": "like",
+          "source": "* P10",
+          "target": "Apr"
+        },
+        {
+          "dimension": "Period",
+          "rule_type": "like",
+          "source": "* P11",
+          "target": "May"
+        },
+        {
+          "dimension": "Period",
+          "rule_type": "like",
+          "source": "* P12",
+          "target": "Jun"
+        }
+      ]
+    }
+  ],
+  "imports": [
+    {
+      "format": "ERP GL Actuals",
+      "file": "gl_actuals_fy27_p01.csv",
+      "mode": "replace",
+      "note": "July FY27 closes: actuals land in Actual / Final / FY27 / Jul."
+    }
+  ],
+  "reports": [
+    {
+      "name": "P&L by Entity",
+      "folder": "Management Reports",
+      "description": "Net income by entity and quarter, in thousands",
+      "cube": "Plan",
+      "definition": {
+        "pov": {
+          "Department": "All Departments",
+          "Product": "All Products",
+          "Channel": "All Channels"
+        },
+        "page": {
+          "Scenario": [
+            "Actual",
+            "Budget",
+            "Forecast"
+          ],
+          "Version": [
+            "Final",
+            "Working"
+          ],
+          "Years": [
+            "FY27",
+            "FY26",
+            "FY28"
+          ]
+        },
+        "rows": [
+          {
+            "dimension": "Entity",
+            "members": [
+              "@ichildren(Fernhollow Consolidated)"
+            ]
+          },
+          {
+            "dimension": "Account",
+            "members": [
+              "@idescendants(Net Income)"
+            ]
+          }
+        ],
+        "columns": [
+          {
+            "dimension": "Period",
+            "members": [
+              "Q1",
+              "Q2",
+              "Q3",
+              "Q4",
+              "YearTotal"
+            ]
+          }
+        ],
+        "suppress_missing_rows": true,
+        "decimals": 1,
+        "scale": 1000,
+        "labels": "name",
+        "title": "Fernhollow P&L by Entity"
+      }
+    },
+    {
+      "name": "Revenue by Channel and Product",
+      "folder": "Management Reports",
+      "description": "Gross sales by channel and product line, two years side by side",
+      "cube": "Plan",
+      "definition": {
+        "pov": {
+          "Account": "Gross Sales",
+          "Department": "No Department"
+        },
+        "page": {
+          "Scenario": [
+            "Budget",
+            "Forecast",
+            "Actual"
+          ],
+          "Version": [
+            "Working",
+            "Final"
+          ],
+          "Entity": [
+            "Fernhollow Consolidated",
+            "@ichildren(Fernhollow Consolidated)"
+          ]
+        },
+        "rows": [
+          {
+            "dimension": "Channel",
+            "members": [
+              "@ichildren(All Channels)"
+            ]
+          },
+          {
+            "dimension": "Product",
+            "members": [
+              "Sauces",
+              "Spice Blends",
+              "Cold Brew"
+            ]
+          }
+        ],
+        "columns": [
+          {
+            "dimension": "Years",
+            "members": [
+              "FY27",
+              "FY28"
+            ]
+          },
+          {
+            "dimension": "Period",
+            "members": [
+              "Q1",
+              "Q2",
+              "Q3",
+              "Q4",
+              "YearTotal"
+            ]
+          }
+        ],
+        "suppress_missing_rows": true,
+        "suppress_missing_columns": true,
+        "decimals": 0,
+        "scale": 1000,
+        "labels": "name"
+      }
+    }
+  ]
+}

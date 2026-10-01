@@ -1,0 +1,6 @@
+# Copy to .dev.vars for `wrangler dev` (never commit .dev.vars).
+SESSION_SECRET=replace-with-at-least-32-random-characters
+# Overrides wrangler.jsonc for local testing with your own OAuth client:
+# GOOGLE_CLIENT_IDS=1234567890-abc.apps.googleusercontent.com
+# The nightly snapshot job's key: `pnpm db:job-key` prints one and stores its hash.
+# JOB_KEY=

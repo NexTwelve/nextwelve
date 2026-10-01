@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex">
+  <meta name="referrer" content="no-referrer">
+  <meta name="theme-color" content="#1f6f5c">
+  <title>NexTwelve (read-only)</title>
+  <link rel="stylesheet" href="/m/m.css">
+  <script type="module" src="/m/m.js"></script>
+</head>
+<body>
+  <header class="bar">
+    <a class="brand" href="/m/">Nex<span>Twelve</span></a>
+    <span class="ro" id="ro-badge" hidden>Read-only</span>
+    <div class="spacer"></div>
+    <button id="disconnect" class="link" type="button" hidden>Disconnect</button>
+  </header>
+
+  <main>
+    <!-- Pairing -->
+    <section id="screen-start" class="screen center" hidden>
+      <h1>View NexTwelve on your phone</h1>
+      <p class="muted">On your computer, open NexTwelve, choose <strong>View on phone</strong>, and scan the code with this phone's camera.</p>
+      <p class="muted small">Phone access is read-only: you can look at forms and reports, but nothing can be changed from here.</p>
+    </section>
+
+    <section id="screen-wait" class="screen center" hidden>
+      <p class="muted">Type this number on your computer</p>
+      <div id="match" class="match" aria-live="polite"></div>
+      <p id="wait-note" class="muted">Waiting for approval&hellip;</p>
+    </section>
+
+    <section id="screen-message" class="screen center" hidden>
+      <h1 id="message-title"></h1>
+      <p id="message-text" class="muted"></p>
+    </section>
+
+    <!-- Viewing -->
+    <section id="screen-list" class="screen" hidden>
+      <p id="who" class="muted small"></p>
+      <label id="app-label" class="field" hidden>Application <select id="app-select"></select></label>
+      <h2>Reports</h2>
+      <ul id="report-list" class="items"></ul>
+      <h2>Forms</h2>
+      <ul id="form-list" class="items"></ul>
+      <p id="list-empty" class="muted" hidden>Nothing here you can see yet.</p>
+    </section>
+
+    <section id="screen-view" class="screen" hidden>
+      <div class="view-head">
+        <button id="back" class="link" type="button">&larr; Back</button>
+        <button id="reload" class="link" type="button">Refresh</button>
+      </div>
+      <h1 id="view-title"></h1>
+      <p id="view-note" class="muted small"></p>
+      <div id="pages" class="pages"></div>
+      <p id="pov" class="muted small"></p>
+      <div class="table-scroll"><table id="table" class="table"></table></div>
+    </section>
+
+    <p id="status" class="status" role="status" aria-live="polite"></p>
+  </main>
+</body>
+</html>

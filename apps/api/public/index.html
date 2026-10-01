@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NexTwelve: open-source planning and budgeting for finance teams</title>
+  <meta name="description" content="Open-source planning and budgeting, free to deploy on your own infrastructure. Forms, reports, GL imports, member-level security and a full audit trail; restore data or metadata to any moment. Try the live demo, no sign-up.">
+  <link rel="stylesheet" href="/landing.css">
+  <script type="module" src="/landing.js"></script>
+</head>
+<body>
+  <header class="site-head">
+    <a class="brand" href="/">Nex<span>Twelve</span></a>
+    <nav aria-label="Main">
+      <a href="#demo">Demo</a>
+      <a href="/roadmap">Roadmap</a>
+      <a href="/architecture">Architecture</a>
+      <a href="#open-source">Self-host</a>
+      <a href="https://github.com/NexTwelve" class="gh" rel="noopener">GitHub</a>
+      <a href="/app/" class="signin">Sign in</a>
+    </nav>
+    <a href="/app/" class="signin signin-m">Sign in</a>
+  </header>
+
+  <main>
+    <p class="ai-line"><strong>Can AI write an EPM stack in 12 hours?</strong> Claude Opus 5.5 Extra can! <a href="/architecture">How it&rsquo;s built</a></p>
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Open-source planning and budgeting for finance teams</p>
+        <h1>Plan the year in grids your team already knows how to use.</h1>
+        <p class="oss-line">Free and open source. <a href="https://github.com/NexTwelve" rel="noopener">Fork it on GitHub</a> and deploy it on your own infrastructure.</p>
+        <p class="lead">NexTwelve holds your plan in a real dimensional model, with data-entry forms, reports and imports from your general ledger on top. Every change is audited, and data or metadata can go back to any moment.</p>
+        <div class="cta">
+          <button class="primary big demo-start" type="button">Try the live demo</button>
+          <a class="button ghost big" href="https://github.com/NexTwelve" rel="noopener">View on GitHub</a>
+        </div>
+        <p class="note demo-note">No sign-up. You get a private copy of a sample company for 24 hours.</p>
+      </div>
+      <figure class="hero-shot">
+        <img src="/img/report.png" width="1200" height="693" alt="A NexTwelve report: revenue by channel and product line, by quarter, in thousands">
+      </figure>
+    </section>
+
+    <section id="features" class="features">
+      <h2>What it does today</h2>
+      <div class="grid">
+        <article>
+          <h3>Model the business</h3>
+          <p>Accounts, entities, periods, years, scenarios, versions and up to eight custom dimensions. Hierarchies roll up as you define them: added, subtracted or ignored.</p>
+        </article>
+        <article>
+          <h3>Enter the plan in forms</h3>
+          <p>Saved forms with page choices and up to three dimensions on rows and columns. Paste a block from Excel; if someone else changed a cell meanwhile, you see it before anything is saved.</p>
+        </article>
+        <article>
+          <h3>Report and download</h3>
+          <p>Read-only reports with empty rows hidden, figures in units, thousands or millions, and one-click downloads to Excel or CSV.</p>
+        </article>
+        <article>
+          <h3>Load actuals from the GL</h3>
+          <p>Import CSV or Excel exports through mapping rules and crosswalk workbooks. Every loaded cell drills back to the source lines it came from.</p>
+        </article>
+        <article>
+          <h3>Control who sees what</h3>
+          <p>Roles per application, member-level read and write access on secured dimensions, and plan windows that close periods for entry.</p>
+        </article>
+        <article>
+          <h3>Undo anything</h3>
+          <p>Every cell change is audited on a hash chain. Put data, members, forms or reports back to any moment, from history or from nightly snapshots.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="showcase">
+      <div class="row">
+        <figure><img src="/img/form.png" width="1200" height="803" loading="lazy" alt="A data-entry form with department and account on rows and months on columns"></figure>
+        <div>
+          <h2>Forms built for the way finance works</h2>
+          <p>Put department and account on rows and months on columns, or any other combination. Only the cells a planner may change are writable; totals stay locked and roll up when the form is saved.</p>
+          <p>Everyone sees only the members they have access to. A planner for one region gets that region's rows and choices, in forms and in reports, and can write only to it.</p>
+        </div>
+      </div>
+      <div class="row reverse">
+        <figure><img src="/img/restore.png" width="1180" height="414" loading="lazy" alt="Previewing a metadata restore: a member added since is removed, everything else unchanged"></figure>
+        <div>
+          <h2>Backups you can actually use</h2>
+          <p>Preview exactly what a restore would change, then run it. Members deleted since come back with their history. Members added since stay if they hold data. A snapshot is taken first, so the restore itself can be undone.</p>
+          <p>Restore a slice of data to a moment, a whole application to a snapshot, or a snapshot into a new application next to the original.</p>
+        </div>
+      </div>
+      <div class="row">
+        <figure><img src="/img/definitions.png" width="1200" height="503" loading="lazy" alt="Importing form and report definitions from Excel, with a problem pointed out by sheet and row"></figure>
+        <div>
+          <h2>Definitions you can edit in Excel</h2>
+          <p>Export every form and report to a workbook: one sheet of settings, one sheet of layout rows. Change them in bulk, import the file back, and check it first: a problem is pointed out by sheet, row and column, and nothing changes until the whole file is right.</p>
+          <p>Each saved version is kept, including deleted definitions, and an old one comes back in a click.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="demo" class="demo">
+      <div class="demo-copy">
+        <h2>Try it on a sample company</h2>
+        <p>Fernhollow Foods is a fictional maker of sauces, spice blends and cold brew, with kitchens in Portland and Savannah and a co-packer in Vancouver. The demo gives you your own copy of its operating plan: FY26 actuals, an FY27 budget, July actuals loaded from a GL export, and its forms and reports.</p>
+        <p>Change anything. Nobody else sees your copy, and it is deleted after 24 hours. Start over at any time for a fresh one.</p>
+        <h3>Things to try</h3>
+        <ul class="tries">
+          <li>Open <em>Department Opex</em>, change a few months and save; then open <em>P&amp;L by Entity</em> and watch net income move.</li>
+          <li>Switch <em>View as</em> to the planner: only Fernhollow Canada is there, and only its cells are writable.</li>
+          <li>Under <em>Form and report definitions</em>, export to Excel, change a layout, and import it back.</li>
+          <li>Under <em>Backups and restore</em>, put the metadata or the data back to how it was before your changes.</li>
+          <li>Choose <em>View on phone</em> and scan the code: the same forms and reports on your phone, read-only.</li>
+        </ul>
+        <div class="cta">
+          <button class="primary big demo-start" type="button">Try the live demo</button>
+          <button class="ghost big demo-fresh" type="button" hidden>Start with a fresh copy</button>
+        </div>
+        <div id="turnstile" class="turnstile"></div>
+        <p class="note demo-status" role="status" aria-live="polite"></p>
+      </div>
+      <div class="people">
+        <h3>Three people in every copy</h3>
+        <dl id="personas">
+          <dt>Administrator</dt><dd>Sees and changes everything, including metadata, definitions and backups.</dd>
+          <dt>Planner, Fernhollow Canada</dt><dd>Enters numbers for Fernhollow Canada only; the rest of the company is hidden.</dd>
+          <dt>Viewer</dt><dd>Reads every form and report; cannot change anything.</dd>
+        </dl>
+      </div>
+    </section>
+
+    <section id="open-source" class="oss">
+      <div>
+        <h2>Open source. Run it on your own infrastructure.</h2>
+        <p>Everything on this page is in the repository, under the Apache License 2.0: the API, the browser app, the database migrations, and the sample company behind the demo. Fork it and deploy it to your own Cloudflare account and Postgres database. There is no license fee; you pay only for your own hosting.</p>
+        <p>Your plan, your actuals and your audit trail stay in a database you control, and you can read every line of the code that touches them.</p>
+        <div class="cta">
+          <a class="button primary big" href="https://github.com/NexTwelve" rel="noopener">Fork on GitHub</a>
+        </div>
+      </div>
+      <div class="stack">
+        <h3>What it runs on</h3>
+        <ul>
+          <li><strong>Cloudflare Workers</strong> serve the API and the browser app.</li>
+          <li><strong>Postgres</strong> holds the model, the data and the audit trail, reached through Hyperdrive.</li>
+          <li><strong>R2</strong> keeps uploaded files and the nightly snapshots.</li>
+        </ul>
+        <p class="note">The README walks through setup: create the database and the bucket, run the migrations, and deploy with Wrangler. Docker Compose runs the whole thing locally.</p>
+      </div>
+    </section>
+
+    <section class="next">
+      <h2>Coming next</h2>
+      <p>A Google Sheets add-on, so planners work in Sheets against the same model, security and audit trail; then calculation rules, currencies and approvals. <a href="/roadmap">See the roadmap</a>.</p>
+    </section>
+  </main>
+
+  <footer class="site-foot">
+    <span>© 2026 NexTwelve</span>
+    <span class="muted">Open source under the Apache License 2.0. Fernhollow Foods is fictional; its numbers are generated.</span>
+    <span class="foot-links">
+      <a href="/roadmap">Roadmap</a>
+      <a href="/architecture">Architecture</a>
+      <a href="https://github.com/NexTwelve" rel="noopener">GitHub</a>
+      <a href="/app/">Sign in</a>
+    </span>
+  </footer>
+</body>
+</html>

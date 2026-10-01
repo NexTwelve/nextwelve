@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NexTwelve architecture and MVP requirements</title>
+  <meta name="description" content="How NexTwelve is built: Cloudflare Workers, Hyperdrive, R2 and Postgres; the data model, the single audited write path, security, backup and recovery, and the core MVP requirements.">
+  <link rel="stylesheet" href="/landing.css">
+</head>
+<body>
+  <header class="site-head">
+    <a class="brand" href="/">Nex<span>Twelve</span></a>
+    <nav aria-label="Main">
+      <a href="/#demo">Demo</a>
+      <a href="/roadmap">Roadmap</a>
+      <a href="/architecture" aria-current="page">Architecture</a>
+      <a href="/#open-source">Self-host</a>
+      <a href="https://github.com/NexTwelve" class="gh" rel="noopener">GitHub</a>
+      <a href="/app/" class="signin">Sign in</a>
+    </nav>
+    <a href="/app/" class="signin signin-m">Sign in</a>
+  </header>
+
+  <main class="doc">
+    <section class="page-hero">
+      <p class="eyebrow">Technical architecture</p>
+      <h1>A small, sturdy stack for a planning system of record</h1>
+      <p class="lead">NexTwelve runs on Cloudflare Workers in front of Postgres. One API is the only way to change the plan: it checks who may change what, writes the cells and records the audit trail in a single database transaction.</p>
+      <ul class="toc" aria-label="On this page">
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#components">Components</a></li>
+        <li><a href="#data">Data model</a></li>
+        <li><a href="#writes">How a change is saved</a></li>
+        <li><a href="#security">Security</a></li>
+        <li><a href="#recovery">Backup and recovery</a></li>
+        <li><a href="#demo">Public demo</a></li>
+        <li><a href="#requirements">MVP requirements</a></li>
+        <li><a href="#limits">Limits</a></li>
+      </ul>
+    </section>
+
+    <section aria-label="Key facts">
+      <div class="stats">
+        <div class="card"><b>1</b><span>write path for every change: entered, imported, restored or undone</span></div>
+        <div class="card"><b>100%</b><span>of tenant tables under row-level security, enforced by Postgres</span></div>
+        <div class="card"><b>500+</b><span>automated tests against a real Postgres, most of them adversarial</span></div>
+        <div class="card"><b>0</b><span>floating-point values: amounts are exact decimals end to end</span></div>
+      </div>
+    </section>
+
+    <section id="overview" aria-labelledby="h-overview">
+      <h2 id="h-overview">Overview</h2>
+      <p class="intro">Three tiers. Clients talk only to the Worker; the Worker is the only thing that talks to the database and to file storage.</p>
+      <div class="diagram" role="img" aria-label="Clients connect to a Cloudflare Worker, which uses Hyperdrive to reach Postgres and stores files in R2.">
+        <div class="tier">
+          <h3>Clients</h3>
+          <div class="box"><b>Browser app</b><span>Forms, reports, imports, definitions, backups and administration, at /app</span></div>
+          <div class="box"><b>Phones, read-only</b><span>Paired by QR code from the browser app; forms and reports, nothing can change</span></div>
+          <div class="box planned"><b>Google Sheets add-on</b><span>Open, refresh and submit forms in a sheet (planned)</span></div>
+          <div class="box"><b>Scripts and integrations</b><span>The same REST API with a session token</span></div>
+        </div>
+        <div class="arrow" aria-hidden="true"></div>
+        <div class="tier edge">
+          <h3>Cloudflare</h3>
+          <div class="box key"><b>Worker: the NexTwelve API</b><span>TypeScript on Hono. Sign-in, validation, grids, reports, imports, snapshots, restores, the demo</span></div>
+          <div class="box"><b>Static assets</b><span>This site and the browser app, served by the same Worker</span></div>
+          <div class="box"><b>Cron Triggers</b><span>Nightly snapshots at 07:17 UTC; hourly removal of expired demo copies</span></div>
+          <div class="box"><b>Hyperdrive</b><span>Pooled connections to Postgres, with query caching off</span></div>
+        </div>
+        <div class="arrow" aria-hidden="true"></div>
+        <div class="tier">
+          <h3>Data and identity</h3>
+          <div class="box key"><b>Postgres 16</b><span>Model, cells, audit chain, security and the functions that enforce them</span></div>
+          <div class="box"><b>R2 object storage</b><span>Uploaded files, reference workbooks and snapshot files</span></div>
+          <div class="box"><b>Google sign-in</b><span>ID tokens checked against Google's published keys</span></div>
+        </div>
+      </div>
+      <p class="legend">Dashed outline: planned. Everything else is built and tested.</p>
+    </section>
+
+    <section id="components" aria-labelledby="h-components">
+      <h2 id="h-components">Components</h2>
+      <div class="table-wrap">
+        <table class="spec">
+          <thead><tr><th>Layer</th><th>Technology</th><th>Responsibility</th></tr></thead>
+          <tbody>
+            <tr><td>API</td><td>Cloudflare Workers, Hono, TypeScript</td><td class="ev">Every request: session check, input validation, reads and writes in one transaction each. The same code runs in Node for tests and scripts.</td></tr>
+            <tr><td>Database</td><td>Postgres 16 (PlanetScale Postgres or any managed Postgres)</td><td class="ev">The plan itself. Schema <code>epm</code>, row-level security, and the database functions that perform every write.</td></tr>
+            <tr><td>Connections</td><td>Cloudflare Hyperdrive</td><td class="ev">Keeps connections to Postgres warm near the database. Caching is off so every read sees the latest committed values.</td></tr>
+            <tr><td>Files</td><td>Cloudflare R2</td><td class="ev">Import files, reference workbooks and snapshots, under one prefix per tenant.</td></tr>
+            <tr><td>Scheduled jobs</td><td>Cron Triggers</td><td class="ev">Nightly snapshots and retention; hourly cleanup of expired demo copies. Authorized by a job key whose hash is the only copy in the database.</td></tr>
+            <tr><td>Identity</td><td>Google sign-in</td><td class="ev">A Google ID token is exchanged for a signed 15-minute session token. Invitations, roles and access live in NexTwelve.</td></tr>
+            <tr><td>Web app</td><td>HTML, CSS and plain JavaScript</td><td class="ev">No framework and no build step; served as static assets with a strict Content Security Policy.</td></tr>
+            <tr><td>Bot check</td><td>Cloudflare Turnstile (optional)</td><td class="ev">In front of "Try the live demo" only.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="data" aria-labelledby="h-data">
+      <h2 id="h-data">Data model</h2>
+      <div class="cards c2">
+        <div class="card"><h3>Applications, cubes and dimensions</h3><p>An application holds dimensions and cubes. Every cube has Scenario, Version, Years, Period, Entity and Account; Department and up to eight custom dimensions (Product, Channel and so on) are optional.</p></div>
+        <div class="card"><h3>Members and hierarchies</h3><p>Members form hierarchies in which each member adds to, subtracts from or is ignored by its parent. Deploying checks the hierarchies and rebuilds a closure table of every ancestor and descendant, so any total is one join away.</p></div>
+        <div class="card"><h3>Cells</h3><p>Only entered or loaded cells are stored, one row each, keyed by a 16-slot coordinate: cube, the six fixed dimensions, Department and eight custom slots. Values are <code>numeric(24,6)</code>: exact decimals, never floating point.</p></div>
+        <div class="card"><h3>History</h3><p>An audit row for every changed cell (old and new value), a transaction record in a SHA-256 hash chain, and versioned members, forms and reports with the moment each change took effect.</p></div>
+      </div>
+    </section>
+
+    <section id="writes" aria-labelledby="h-writes">
+      <h2 id="h-writes">How a change is saved</h2>
+      <p class="intro">Grid saves, imports, undo and restores all take this path. There is no other way to write a cell: the API's database role has no direct write access to cells, audit or access tables.</p>
+      <ol class="steps">
+        <li><b>The client sends the changed cells with its session token</b><span>Along with the values it read, so the server can tell whether someone else changed them since.</span></li>
+        <li><b>The Worker opens one transaction and sets the tenant and user</b><span>From here on, Postgres itself confines every query to that tenant.</span></li>
+        <li><b><code>apply_changes</code> checks everything again, inside the database</b><span>Role, coordinates, write access to each member, open plan windows, and conflicts with changes made meanwhile.</span></li>
+        <li><b>Cells, audit rows and the chain entry are written together</b><span>One audit row per changed cell; one transaction record linked to the previous one by a SHA-256 hash.</span></li>
+        <li><b>Commit, or nothing at all</b><span>Totals are computed on read from the closure table, so they are never stale. Undo and point-in-time restore replay old values from the audit trail.</span></li>
+      </ol>
+    </section>
+
+    <section id="security" aria-labelledby="h-security">
+      <h2 id="h-security">Security</h2>
+      <div class="table-wrap">
+        <table class="spec">
+          <thead><tr><th>Layer</th><th>How it is enforced</th></tr></thead>
+          <tbody>
+            <tr><td>Identity</td><td class="ev">Google ID tokens checked for signature, issuer, audience and expiry. Users match on Google's stable ID; invitations bind by verified email; a Workspace domain can admit its own users.</td></tr>
+            <tr><td>Tenant isolation</td><td class="ev">Row-level security on every tenant table, forced so that database functions are bound by it too. The API connects as a role that owns nothing and cannot bypass it.</td></tr>
+            <tr><td>Roles</td><td class="ev">Service administrator per tenant; application administrator, power user, planner and viewer per application. Checked in the API and again in the database.</td></tr>
+            <tr><td>Member-level access</td><td class="ev">Read and write grants on secured dimensions, to users or groups. The closest grant wins and an explicit "none" denies. Forms and reports show only what a person may read.</td></tr>
+            <tr><td>Writes</td><td class="ev">Only through <code>apply_changes</code>, which re-checks role, access and plan windows for every cell.</td></tr>
+            <tr><td>Audit</td><td class="ev">Append-only cell audit and a per-application hash chain that can be re-verified at any time.</td></tr>
+            <tr><td>Phones</td><td class="ev">Paired by a one-time QR code (two minutes) that the user approves on the computer by typing the number the phone shows. The phone's session may call only read routes, its database transactions are read-only, and it ends when revoked from either side or after 8 hours.</td></tr>
+            <tr><td>Files and snapshots</td><td class="ev">Stored under the tenant's prefix; snapshot files carry SHA-256 checksums kept in the database, and a restore refuses any file that does not match.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="recovery" aria-labelledby="h-recovery">
+      <h2 id="h-recovery">Backup and recovery</h2>
+      <div class="cards c3">
+        <div class="card"><h3>Point-in-time restore</h3><p>Put a slice of data (cube, scenarios, versions, any members) back to how it was at a moment, in place or into another version. Preview first; up to 100,000 changed cells per restore.</p></div>
+        <div class="card"><h3>Metadata restore</h3><p>Put members, hierarchies, forms and reports back to a moment or a snapshot. Deleted members return with their history; members added since that hold data are kept.</p></div>
+        <div class="card"><h3>Snapshots</h3><p>A consistent copy of an application in R2: manual, nightly (newest 30, plus one a month for 12 months) and automatically before snapshot and metadata restores. Restore in place or into a new application.</p></div>
+      </div>
+      <p class="legend">Every restore is itself an audited change that can be undone.</p>
+    </section>
+
+    <section id="demo" aria-labelledby="h-demo">
+      <h2 id="h-demo">Public demo</h2>
+      <div class="cards c2">
+        <div class="card">
+          <h3>A private copy per visitor</h3>
+          <ul class="ticks">
+            <li>Each visitor gets a tenant of their own, loaded from a stored template in a few seconds</li>
+            <li>Three people in every copy: administrator, regional planner, viewer</li>
+            <li>Isolated by the same row-level security as real tenants</li>
+            <li>Removed with its files when it expires (24 hours) or when the visitor starts over</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Guard rails</h3>
+          <ul class="ticks">
+            <li>No inviting people, changing roles or creating applications</li>
+            <li>1 MB per request, 16 MB of uploads and 20 snapshots per copy</li>
+            <li>Limits per network on new copies per hour and live copies at once, plus an overall cap</li>
+            <li>An optional Turnstile check before a copy starts</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="requirements" aria-labelledby="h-req">
+      <h2 id="h-req">Core MVP requirements</h2>
+      <p class="intro">What the minimum viable product had to do, and how each requirement is met and verified.</p>
+      <div class="table-wrap">
+        <table class="spec">
+          <thead><tr><th>ID</th><th>Requirement</th><th>How it is met and verified</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>F1</td><td>Model a business: dimensions, hierarchies, cubes</td><td class="ev">Six fixed dimensions, optional Department, eight custom; validated deploy; metadata test suites</td><td><span class="badge shipped">Met</span></td></tr>
+            <tr><td>F2</td><td>Enter plan data in forms</td><td class="ev">Saved forms, page choices, up to three dimensions per axis, paste, conflict detection; grid and form suites</td><td><span class="badge shipped">Met</span></td></tr>
+            <tr><td>F3</td><td>Report and export</td><td class="ev">Reports with suppression, scaling and rounding; Excel and CSV output; report suites</td><td><span class="badge shipped">Met</span></td></tr>
+            <tr><td>F4</td><td>Load actuals from the general ledger</td><td class="ev">CSV and Excel imports, mapping rules, crosswalk workbooks, dry runs, drill-back; import suites</td><td><span class="badge shipped">Met</span></td></tr>
+            <tr><td>F5</td><td>Control who sees and changes what</td><td class="ev">Roles, member-level grants, plan windows; security and isolation suites</td><td><span class="badge shipped">Met</span></td></tr>
+            <tr><td>F6</td><td>Audit every change and undo it</td><td class="ev">Cell audit, hash chain with verification, undo by transaction; grid and concurrency suites</td><td><span class="badge shipped">Met</span></td></tr>
+            <tr><td>F7</td><td>Restore data and metadata to a point in time</td><td class="ev">Slice restore and metadata restore with previews; restore and metadata-restore suites</td><td><span class="badge shipped">Met</span></td></tr>
+            <tr><td>F8</td><td>Back up applications</td><td class="ev">Manual, nightly and pre-restore snapshots with retention and checksums; snapshot suites</td><td><span class="badge shipped">Met</span></td></tr>
+            <tr><td>F9</td><td>Edit form and report definitions in Excel</td><td class="ev">Export and import as Excel or CSV, checked row by row before anything changes; definitions suites</td><td><span class="badge shipped">Met</span></td></tr>
+            <tr><td>F10</td><td>Plan in Google Sheets</td><td class="ev">Sheets add-on on the same API</td><td><span class="badge next">Phase 1</span></td></tr>
+            <tr><td>N1</td><td>Tenant isolation that does not depend on the API</td><td class="ev">Forced row-level security; tests read every tenant table as another tenant and as no tenant</td><td><span class="badge shipped">Met</span></td></tr>
+            <tr><td>N2</td><td>Exact amounts</td><td class="ev">Decimal storage and decimal text in snapshots, exports and reports; precision suites</td><td><span class="badge shipped">Met</span></td></tr>
+            <tr><td>N3</td><td>One audited write path</td><td class="ev">The API role cannot write cells, audit or access tables directly; checked by the isolation suite</td><td><span class="badge shipped">Met</span></td></tr>
+            <tr><td>N4</td><td>Responsive at sample-company scale</td><td class="ev">20,000-cell saves in seconds on a populated application, asserted in tests; a demo copy starts in a few seconds</td><td><span class="badge shipped">Met</span></td></tr>
+            <tr><td>N5</td><td>Recoverable</td><td class="ev">Nightly snapshots plus point-in-time restore from the audit trail; tampered and missing files are refused</td><td><span class="badge shipped">Met</span></td></tr>
+            <tr><td>N6</td><td>Hard to break</td><td class="ev">500+ tests against a real Postgres, about 390 of them adversarial</td><td><span class="badge shipped">Met</span></td></tr>
+            <tr><td>N7</td><td>Self-hostable</td><td class="ev">Open source; runs locally with Docker and Wrangler, deploys to your own Cloudflare account and Postgres</td><td><span class="badge shipped">Met</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="limits" aria-labelledby="h-limits">
+      <h2 id="h-limits">Limits</h2>
+      <div class="table-wrap">
+        <table class="spec">
+          <thead><tr><th>What</th><th>Limit</th></tr></thead>
+          <tbody>
+            <tr><td>Cells in one grid, form or report</td><td class="ev">50,000</td></tr>
+            <tr><td>Dimensions on a form or report axis</td><td class="ev">3</td></tr>
+            <tr><td>Custom dimensions per cube</td><td class="ev">8</td></tr>
+            <tr><td>Amount precision</td><td class="ev">18 digits before the decimal point, 6 after</td></tr>
+            <tr><td>Changed cells per restore</td><td class="ev">100,000</td></tr>
+            <tr><td>Uploaded file</td><td class="ev">25 MB (1 MB in the demo)</td></tr>
+            <tr><td>Mapping rules per import format</td><td class="ev">50,000</td></tr>
+            <tr><td>Definitions import</td><td class="ev">5,000 definitions and 100,000 layout rows per file</td></tr>
+            <tr><td>Session</td><td class="ev">15 minutes (a demo session lasts as long as its copy)</td></tr>
+            <tr><td>Snapshot retention</td><td class="ev">Nightly: newest 30 plus newest per month for 12 months. Before a restore: 90 days. Manual: kept.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <div class="callout">
+        <div>
+          <h2>Read the code, run it yourself</h2>
+          <p>The schema, the API, the browser app and every test are in the repository.</p>
+        </div>
+        <a class="button primary big" href="https://github.com/NexTwelve" rel="noopener">NexTwelve on GitHub</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-foot">
+    <span>&copy; 2026 NexTwelve</span>
+    <span class="muted">Open source under the Apache License 2.0.</span>
+    <span class="foot-links">
+      <a href="/">Home</a>
+      <a href="/roadmap">Roadmap</a>
+      <a href="https://github.com/NexTwelve" rel="noopener">GitHub</a>
+      <a href="/app/">Sign in</a>
+    </span>
+  </footer>
+</body>
+</html>
