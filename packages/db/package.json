@@ -18,7 +18,8 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "bootstrap": "tsx --env-file=../../.env src/cli.ts bootstrap",
     "migrate": "tsx --env-file=../../.env src/cli.ts migrate",
-    "job-key": "tsx --env-file=../../.env src/cli.ts job-key"
+    "job-key": "tsx --env-file=../../.env src/cli.ts job-key",
+    "check": "tsx --env-file=../../.env src/cli.ts check"
   },
   "dependencies": {
     "pg": "^8.23.1"

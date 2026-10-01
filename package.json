@@ -16,6 +16,7 @@
     "db:bootstrap": "pnpm --filter @nextwelve/db bootstrap",
     "db:migrate": "pnpm --filter @nextwelve/db migrate",
     "db:job-key": "pnpm --filter @nextwelve/db job-key",
+    "db:check": "pnpm --filter @nextwelve/db check",
     "dev": "pnpm --filter @nextwelve/api dev",
     "test": "pnpm -r test",
     "provision": "pnpm --filter @nextwelve/api provision",

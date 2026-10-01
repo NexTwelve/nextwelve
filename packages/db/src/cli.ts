@@ -1,4 +1,5 @@
-import { bootstrapRoles, createDatabase, grantOnExistingDatabase, migrate, setJobKey } from './index.js';
+import pg from 'pg';
+import { bootstrapRoles, createDatabase, grantOnExistingDatabase, migrate, pgUrl, setJobKey } from './index.js';
 
 const [command, ...args] = process.argv.slice(2);
 
@@ -15,6 +16,11 @@ const passwords = { owner: process.env.EPM_OWNER_PASSWORD, app: process.env.EPM_
 
 if (command === 'bootstrap') {
   const adminUrl = need('ADMIN_DATABASE_URL');
+  if (args.includes('--existing') && (!passwords.owner || !passwords.app)) {
+    // Without them the roles are created with no password, and nothing can log in as them.
+    console.error('EPM_OWNER_PASSWORD and EPM_APP_PASSWORD must both be set in .env (generate each with `openssl rand -hex 32`)');
+    process.exit(2);
+  }
   await bootstrapRoles(adminUrl, passwords);
   if (args.includes('--existing')) {
     // Managed Postgres: grant on the database ADMIN_DATABASE_URL points at.
@@ -38,7 +44,38 @@ if (command === 'bootstrap') {
   const key = await setJobKey(need('MIGRATION_DATABASE_URL'));
   console.log('job key stored (as a hash). Give the Worker the key itself:');
   console.log(`  echo '${key}' | npx wrangler secret put JOB_KEY      # local dev: JOB_KEY=${key} in apps/api/.dev.vars`);
+} else if (command === 'check') {
+  // Log in as each role the way the scripts and Hyperdrive will, and say who we are.
+  let failed = false;
+  for (const name of ['ADMIN_DATABASE_URL', 'MIGRATION_DATABASE_URL', 'DATABASE_URL']) {
+    const url = process.env[name];
+    if (!url) {
+      console.log(`--   ${name} is not set`);
+      continue;
+    }
+    const shown = url.replace(/:\/\/([^:/@]+):[^@]*@/, '://$1:•••@');
+    const client = new pg.Client({ connectionString: pgUrl(url) });
+    try {
+      await client.connect();
+      const r = await client.query<{ who: string; db: string; bypass: boolean }>(
+        `select current_user as who, current_database() as db, (select rolbypassrls from pg_roles where rolname = current_user) as bypass`,
+      );
+      const row = r.rows[0]!;
+      const warn = name !== 'ADMIN_DATABASE_URL' && row.bypass ? '  << this role bypasses row-level security; it should not' : '';
+      console.log(`ok   ${name}: logged in as ${row.who} on database ${row.db}${warn}`);
+    } catch (err) {
+      failed = true;
+      console.log(`FAIL ${name} (${shown}): ${(err as Error).message}`);
+    } finally {
+      await client.end().catch(() => undefined);
+    }
+  }
+  if (process.env.DATABASE_URL) {
+    const u = new URL(process.env.DATABASE_URL);
+    console.log(`\nFor Hyperdrive: --connection-string="postgresql://${u.username}:<EPM_APP_PASSWORD>@${u.host}${u.pathname}"`);
+  }
+  process.exit(failed ? 1 : 0);
 } else {
-  console.error('usage: cli.ts bootstrap [dbname | --existing] | migrate | job-key');
+  console.error('usage: cli.ts bootstrap [dbname | --existing] | migrate | job-key | check');
   process.exit(2);
 }

@@ -1,45 +1,62 @@
 {
-  "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "nextwelve-api",
-  "main": "src/worker.ts",
-  "compatibility_date": "2026-09-15",
-  // Run the Worker next to the database; a grid read makes several round trips to Postgres.
-  "placement": { "mode": "smart" },
-  "observability": { "enabled": true },
-  // Nightly snapshots of every application that changed, then retention (UTC); hourly removal of
-  // expired demo copies.
-  "triggers": { "crons": ["17 7 * * *", "41 * * * *"] },
-  // The browser UI. API routes always reach the Worker first.
-  "assets": {
-    "directory": "./public",
-    "run_worker_first": ["/v1/*", "/healthz"]
-  },
-  "vars": {
-    // OAuth client ID(s) whose Google ID tokens are accepted; the first is used by the browser UI.
-    "GOOGLE_CLIENT_IDS": "000000000000-replace-me.apps.googleusercontent.com",
-    "SESSION_TTL_SECONDS": "900",
-    // The public demo ("Try the demo" on the landing page). Run `pnpm demo:template` once first.
-    "DEMO_ENABLED": "true",
-    "DEMO_MAX_LIVE": "200",
-    "DEMO_PER_IP_HOUR": "5",
-    "DEMO_PER_IP_LIVE": "10",
-    "DEMO_HOURS": "24",
-    // Cloudflare Turnstile site key (optional); the secret goes in with `wrangler secret put TURNSTILE_SECRET`.
-    "TURNSTILE_SITE_KEY": ""
-  },
-  // To serve nextwelve.com from this Worker, add the domain to your Cloudflare account, then:
-  // "routes": [{ "pattern": "nextwelve.com", "custom_domain": true }, { "pattern": "www.nextwelve.com", "custom_domain": true }],
-  // Uploaded import files and dataset workbooks. Local dev simulates the bucket.
-  "r2_buckets": [{ "binding": "FILES", "bucket_name": "nextwelve-files" }],
-  // SESSION_SECRET is a secret: `wrangler secret put SESSION_SECRET` (local dev: .dev.vars).
-  "hyperdrive": [
-    {
-      "binding": "HYPERDRIVE",
-      // `wrangler hyperdrive create nextwelve-db --connection-string=<epm_app on PlanetScale> --caching-disabled`
-      "id": "replace-with-your-hyperdrive-config-id",
-      // Local dev talks straight to Postgres (docker compose) as the API role. Wrangler requires a
-      // password here; the local container uses trust auth, so any value works.
-      "localConnectionString": "postgres://epm_app:local-only@localhost:54329/nextwelve"
-    }
-  ]
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "nextwelve-api",
+	"main": "src/worker.ts",
+	"compatibility_date": "2026-09-15",
+	// Run the Worker next to the database; a grid read makes several round trips to Postgres.
+	"placement": {
+		"mode": "smart"
+	},
+	"observability": {
+		"enabled": true
+	},
+	// Nightly snapshots of every application that changed, then retention (UTC); hourly removal of
+	// expired demo copies.
+	"triggers": {
+		"crons": [
+			"17 7 * * *",
+			"41 * * * *"
+		]
+	},
+	// The browser UI. API routes always reach the Worker first.
+	"assets": {
+		"directory": "./public",
+		"run_worker_first": [
+			"/v1/*",
+			"/healthz"
+		]
+	},
+	"vars": {
+		// OAuth client ID(s) whose Google ID tokens are accepted; the first is used by the browser UI.
+		"GOOGLE_CLIENT_IDS": "000000000000-replace-me.apps.googleusercontent.com",
+		"SESSION_TTL_SECONDS": "900",
+		// The public demo ("Try the demo" on the landing page). Run `pnpm demo:template` once first.
+		"DEMO_ENABLED": "true",
+		"DEMO_MAX_LIVE": "200",
+		"DEMO_PER_IP_HOUR": "5",
+		"DEMO_PER_IP_LIVE": "10",
+		"DEMO_HOURS": "24",
+		// Cloudflare Turnstile site key (optional); the secret goes in with `wrangler secret put TURNSTILE_SECRET`.
+		"TURNSTILE_SITE_KEY": ""
+	},
+	// To serve nextwelve.com from this Worker, add the domain to your Cloudflare account, then:
+	// "routes": [{ "pattern": "nextwelve.com", "custom_domain": true }, { "pattern": "www.nextwelve.com", "custom_domain": true }],
+	// Uploaded import files and dataset workbooks. Local dev simulates the bucket.
+	"r2_buckets": [
+		{
+			"binding": "FILES",
+			"bucket_name": "nextwelve-files"
+		}
+	],
+	// SESSION_SECRET is a secret: `wrangler secret put SESSION_SECRET` (local dev: .dev.vars).
+	"hyperdrive": [
+		{
+			"binding": "HYPERDRIVE",
+			// `wrangler hyperdrive create nextwelve-db --connection-string=<epm_app on PlanetScale> --caching-disabled`
+			"id": "abcb0aae3817449a98c57e90c6f2d6d8",
+			// Local dev talks straight to Postgres (docker compose) as the API role. Wrangler requires a
+			// password here; the local container uses trust auth, so any value works.
+			"localConnectionString": "postgres://epm_app:local-only@localhost:54329/nextwelve"
+		}
+	]
 }
