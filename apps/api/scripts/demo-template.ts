@@ -13,6 +13,7 @@ import { randomBytes } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { createLocalJWKSet, exportJWK, generateKeyPair, SignJWT } from 'jose';
 import pg from 'pg';
+import { pgUrl } from '../../../packages/db/src/index.js';
 import { createApp } from '../src/app.js';
 import { createGoogleVerifier } from '../src/auth/google.js';
 import { createSessionSigner } from '../src/auth/session.js';
@@ -27,9 +28,9 @@ const AUD = 'nextwelve-demo-template';
 export async function buildDemoTemplate(ownerUrl: string, appUrl: string, log: (msg: string) => void = () => undefined): Promise<{ snapshotId: string; facts: number }> {
   const model = loadSampleModel('fernhollow');
   const [admin, planner, viewer] = DEMO_PERSONAS as [typeof DEMO_PERSONAS[number], typeof DEMO_PERSONAS[number], typeof DEMO_PERSONAS[number]];
-  const owner = new pg.Client({ connectionString: ownerUrl });
+  const owner = new pg.Client({ connectionString: pgUrl(ownerUrl) });
   await owner.connect();
-  const pool = new pg.Pool({ connectionString: appUrl, max: 4 });
+  const pool = new pg.Pool({ connectionString: pgUrl(appUrl), max: 4 });
   // A throwaway tenant, marked as a demo so purge_tenant may remove it.
   const tenantId = (await owner.query<{ id: string }>('select epm.provision_tenant($1, null, $2) as id', ['NexTwelve demo template (building)', admin.email])).rows[0]!.id;
   await owner.query("update epm.tenant set demo_expires_at = now() + interval '2 hours' where tenant_id = $1", [tenantId]);

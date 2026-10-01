@@ -21,12 +21,22 @@ export interface RolePasswords {
 }
 
 /**
+ * Connection strings as node-postgres needs them. libpq's `sslrootcert=system`, which PlanetScale's
+ * dashboard puts in the strings it gives you, means "use the system CA store"; node-postgres would
+ * try to open a file called "system". Dropping it keeps `sslmode=verify-full`: Node then verifies
+ * the server certificate against its own CA bundle.
+ */
+export function pgUrl(url: string): string {
+  return url.replace(/([?&])sslrootcert=system(&|$)/i, (_m, pre: string, post: string) => (post ? pre : '')).replace(/[?&]$/, '');
+}
+
+/**
  * Create the epm_owner and epm_app roles; safe to repeat. Needs a role with CREATEROLE:
  * a local superuser, or PlanetScale's default "postgres" role. Passwords are set when given
  * (managed databases need them; local trust auth does not).
  */
 export async function bootstrapRoles(adminUrl: string, passwords: RolePasswords = {}): Promise<void> {
-  const client = new pg.Client({ connectionString: adminUrl });
+  const client = new pg.Client({ connectionString: pgUrl(adminUrl) });
   await client.connect();
   try {
     await client.query(readFileSync(join(bootstrapDir, 'roles.sql'), 'utf8'));
@@ -43,7 +53,7 @@ export async function bootstrapRoles(adminUrl: string, passwords: RolePasswords 
  * admin role. Let epm_owner create the schema in it and epm_app connect to it.
  */
 export async function grantOnExistingDatabase(adminUrl: string): Promise<string> {
-  const client = new pg.Client({ connectionString: adminUrl });
+  const client = new pg.Client({ connectionString: pgUrl(adminUrl) });
   await client.connect();
   try {
     const name = (await client.query<{ db: string }>('select current_database() as db')).rows[0]!.db;
@@ -59,7 +69,7 @@ export async function grantOnExistingDatabase(adminUrl: string): Promise<string>
 /** Create a database owned by epm_owner. Run as a superuser. */
 export async function createDatabase(superUrl: string, name: string): Promise<void> {
   if (!/^[a-z_][a-z0-9_]{0,62}$/.test(name)) throw new Error(`invalid database name: ${name}`);
-  const client = new pg.Client({ connectionString: superUrl });
+  const client = new pg.Client({ connectionString: pgUrl(superUrl) });
   await client.connect();
   try {
     await client.query(`create database ${name} owner epm_owner`);
@@ -72,7 +82,7 @@ export async function createDatabase(superUrl: string, name: string): Promise<vo
 
 /** Apply pending migrations in file-name order, each in its own transaction. Run as epm_owner. */
 export async function migrate(ownerUrl: string, dir: string = migrationsDir): Promise<MigrationResult> {
-  const client = new pg.Client({ connectionString: ownerUrl });
+  const client = new pg.Client({ connectionString: pgUrl(ownerUrl) });
   await client.connect();
   const result: MigrationResult = { applied: [], skipped: [] };
   try {
@@ -117,7 +127,7 @@ export async function migrate(ownerUrl: string, dir: string = migrationsDir): Pr
 export async function setJobKey(ownerUrl: string, key?: string): Promise<string> {
   const value = key ?? Buffer.from(crypto.getRandomValues(new Uint8Array(32))).toString('base64url');
   if (value.length < 32) throw new Error('a job key needs at least 32 characters');
-  const client = new pg.Client({ connectionString: ownerUrl });
+  const client = new pg.Client({ connectionString: pgUrl(ownerUrl) });
   await client.connect();
   try {
     await client.query('select epm.set_job_key($1)', [value]);

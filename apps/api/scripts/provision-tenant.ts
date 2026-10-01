@@ -7,6 +7,7 @@
  * granted). Leave it out for invite-only tenants, including personal Gmail testing.
  */
 import pg from 'pg';
+import { pgUrl } from '../../../packages/db/src/index.js';
 
 function arg(name: string): string | undefined {
   const i = process.argv.indexOf(`--${name}`);
@@ -22,7 +23,7 @@ if (!url || !name || !adminEmail) {
   process.exit(2);
 }
 
-const client = new pg.Client({ connectionString: url });
+const client = new pg.Client({ connectionString: pgUrl(url) });
 await client.connect();
 try {
   const res = await client.query<{ id: string }>('select epm.provision_tenant($1, $2, $3) as id', [name, domain, adminEmail]);

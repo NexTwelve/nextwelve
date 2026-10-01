@@ -82,32 +82,42 @@ add yourself as a test user.
 
 ## Deploying to Cloudflare with PlanetScale Postgres
 
-1. **Create the database** in PlanetScale (Postgres) and copy the connection string for the default
-   `postgres` role. That role has `CREATEROLE` but also `BYPASSRLS`, so use it only for bootstrap.
+1. **Create the database.** In PlanetScale, create a **Postgres** database (a single node is enough to
+   start; pick the region nearest your users). Its database is named `postgres`. Click **Connect**,
+   choose the `main` branch and the default `postgres` role, and copy the host, username and
+   password. The username has the branch id after a dot (`postgres.abc123xyz`); keep that suffix,
+   because every role connects as `<role>.<branch id>`. The `postgres` role has `CREATEROLE` but
+   also `BYPASSRLS`, so use it only for bootstrap.
 
-2. **Create the roles and the schema** from your machine:
+2. **Create the roles and the schema** from your machine. Generate the two passwords with
+   `openssl rand -hex 32` (hex, so they need no escaping in a URL), then in `.env`:
 
    ```bash
-   # in .env
-   ADMIN_DATABASE_URL=<postgres role connection string>
-   EPM_OWNER_PASSWORD=$(openssl rand -base64 32)
-   EPM_APP_PASSWORD=$(openssl rand -base64 32)
-   MIGRATION_DATABASE_URL=<same host and database, user epm_owner, EPM_OWNER_PASSWORD>
-   DATABASE_URL=<same host and database, user epm_app, EPM_APP_PASSWORD>
+   ADMIN_DATABASE_URL=postgresql://postgres.<branch>:<password>@<host>:5432/postgres?sslmode=verify-full
+   EPM_OWNER_PASSWORD=<hex password 1>
+   EPM_APP_PASSWORD=<hex password 2>
+   MIGRATION_DATABASE_URL=postgresql://epm_owner.<branch>:<hex password 1>@<host>:5432/postgres?sslmode=verify-full
+   DATABASE_URL=postgresql://epm_app.<branch>:<hex password 2>@<host>:5432/postgres?sslmode=verify-full
+   ```
 
-   pnpm db:bootstrap --existing
+   ```bash
+   pnpm db:bootstrap --existing         # creates epm_owner and epm_app, grants on the postgres database
    pnpm db:migrate                      # applies db/migrations/0001..0013 in order
    ```
 
-   `--existing` grants on the database the admin URL points at instead of creating one.
+   `--existing` grants on the database the admin URL points at instead of creating one. Use port
+   5432 (direct), not 6432 (PgBouncer): Hyperdrive pools connections itself. Do not give `epm_app`
+   the dashboard's `pg_read_all_data` / `pg_write_all_data` roles: the API must not be able to
+   write cells except through `apply_changes`.
 
 3. **Hyperdrive** connects the Worker to Postgres as `epm_app`. Caching must be off: grid reads
    must see the latest committed values, and every request runs in its own transaction.
 
    ```bash
    cd apps/api
-   npx wrangler hyperdrive create nextwelve-db --connection-string="<DATABASE_URL>" --caching-disabled
-   # copy the id into wrangler.jsonc → hyperdrive[0].id
+   npx wrangler hyperdrive create nextwelve-db --caching-disabled \
+     --connection-string="postgresql://epm_app.<branch>:<hex password 2>@<host>:5432/postgres"
+   # copy the id into wrangler.jsonc → hyperdrive[0].id (TLS is on by default)
    ```
 
 4. **R2, secrets, config**

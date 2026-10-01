@@ -12,6 +12,7 @@
 import { randomBytes } from 'node:crypto';
 import { createLocalJWKSet, exportJWK, generateKeyPair, SignJWT } from 'jose';
 import pg from 'pg';
+import { pgUrl } from '../../../packages/db/src/index.js';
 import { createApp } from '../src/app.js';
 import { createGoogleVerifier } from '../src/auth/google.js';
 import { createSessionSigner } from '../src/auth/session.js';
@@ -38,7 +39,7 @@ const model = loadSampleModel('fernhollow');
 const SEED = 'seed@nextwelve.invalid';
 const AUD = 'nextwelve-seed';
 
-const owner = new pg.Client({ connectionString: ownerUrl });
+const owner = new pg.Client({ connectionString: pgUrl(ownerUrl) });
 await owner.connect();
 const tenantId = (
   await owner.query<{ id: string }>('select epm.provision_tenant($1, null, $2) as id', [`${model.company} (sample)`, SEED])
@@ -47,7 +48,7 @@ const tenantId = (
 // Drive the real API in-process; only the seed user's sign-in uses a local signing key.
 const { privateKey, publicKey } = await generateKeyPair('RS256');
 const jwk = { ...(await exportJWK(publicKey)), kid: 'seed', alg: 'RS256' };
-const pool = new pg.Pool({ connectionString: appUrl, max: 4 });
+const pool = new pg.Pool({ connectionString: pgUrl(appUrl), max: 4 });
 const app = createApp({
   db: poolDatabase(pool),
   blobs: memoryBlobStore(),
