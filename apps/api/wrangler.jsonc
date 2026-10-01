@@ -40,7 +40,7 @@
 		"TURNSTILE_SITE_KEY": ""
 	},
 	// To serve nextwelve.com from this Worker, add the domain to your Cloudflare account, then:
-	// "routes": [{ "pattern": "nextwelve.com", "custom_domain": true }, { "pattern": "www.nextwelve.com", "custom_domain": true }],
+	"routes": [{ "pattern": "nextwelve.com", "custom_domain": true }, { "pattern": "www.nextwelve.com", "custom_domain": true }],
 	// Uploaded import files and dataset workbooks. Local dev simulates the bucket.
 	"r2_buckets": [
 		{
