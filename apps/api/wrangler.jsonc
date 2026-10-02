@@ -37,7 +37,7 @@
 		"DEMO_PER_IP_LIVE": "10",
 		"DEMO_HOURS": "24",
 		// Cloudflare Turnstile site key (optional); the secret goes in with `wrangler secret put TURNSTILE_SECRET`.
-		"TURNSTILE_SITE_KEY": ""
+		"TURNSTILE_SITE_KEY": "0x4AAAAAAFLtYGsIXEJMV6mB"
 	},
 	// To serve nextwelve.com from this Worker, add the domain to your Cloudflare account, then:
 	"routes": [{ "pattern": "nextwelve.com", "custom_domain": true }, { "pattern": "www.nextwelve.com", "custom_domain": true }],

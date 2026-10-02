@@ -2,7 +2,7 @@
   --bg: #f6f7f9; --panel: #ffffff; --ink: #1d2330; --muted: #5f6b7a; --line: #dfe3ea;
   --accent: #1f6f5c; --accent-ink: #ffffff; --accent-soft: #e3f1ed;
   --parent: #f1f3f6; --locked: #f8f9fb; --dirty: #fff4cf; --danger: #b42318; --danger-soft: #fdecea;
-  --focus: #2b7fff;
+  --focus: #2b7fff; --hint: #f2b705;
   font: 14px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   color-scheme: light dark;
 }
@@ -10,7 +10,7 @@
   :root {
     --bg: #12151b; --panel: #1a1e26; --ink: #e6e9ef; --muted: #98a2b3; --line: #2c323d;
     --accent: #4cc3a2; --accent-ink: #0d1a16; --accent-soft: #173229;
-    --parent: #20252f; --locked: #1d222b; --dirty: #3d3517; --danger: #ff6b5f; --danger-soft: #3a1d1b;
+    --parent: #20252f; --locked: #1d222b; --dirty: #3d3517; --danger: #ff6b5f; --danger-soft: #3a1d1b; --hint: #ffcc33;
   }
 }
 * { box-sizing: border-box; }
@@ -45,6 +45,12 @@ select { font: inherit; padding: 5px 8px; border-radius: 6px; border: 1px solid 
 
 .main { padding: 20px 24px; min-width: 0; }
 .empty { margin-top: 80px; text-align: center; }
+/* "Pick a form on the left", with a yellow arrow pointing at the list. */
+.empty.pick { display: flex; align-items: center; justify-content: center; gap: .45em; font-size: 32pt; font-weight: 650; line-height: 1.15; color: var(--ink); }
+.empty.pick::before {
+  content: ""; flex: none; width: 1.5em; height: 1em; background: var(--hint);
+  clip-path: polygon(0 50%, 42% 0, 42% 30%, 100% 30%, 100% 70%, 42% 70%, 42% 100%);
+}
 .form-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
 .form-head h1 { margin: 0; font-size: 20px; }
 .form-head p { margin: 4px 0 0; }

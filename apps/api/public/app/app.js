@@ -332,6 +332,7 @@ async function start() {
   document.querySelector('.app-picker').hidden = state.apps.length === 0;
   if (state.apps.length === 0) {
     $('empty').textContent = 'You have no applications yet. Ask an administrator for a role.';
+    $('empty').classList.remove('pick');
     return;
   }
   let remembered = null;
@@ -389,7 +390,9 @@ async function loadForms() {
     list.append(el('a', { href: '#', dataset: { view: 'backups' }, onclick: (e) => { e.preventDefault(); showBackups(); } }, 'Backups and restore'));
   }
   showView('empty');
+  // With forms to choose from, the hint is large and points at the list.
   $('empty').textContent = state.forms.length ? 'Pick a form on the left.' : 'This application has no forms yet.';
+  $('empty').classList.toggle('pick', state.forms.length > 0);
 }
 
 function showView(name) {
