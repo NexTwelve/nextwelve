@@ -46,7 +46,7 @@ select { font: inherit; padding: 5px 8px; border-radius: 6px; border: 1px solid 
 .main { padding: 20px 24px; min-width: 0; }
 .empty { margin-top: 80px; text-align: center; }
 /* "Pick a form on the left", with a yellow arrow pointing at the list. */
-.empty.pick { display: flex; align-items: center; justify-content: center; gap: .45em; font-size: 32pt; font-weight: 650; line-height: 1.15; color: var(--ink); }
+.empty.pick { display: flex; align-items: center; justify-content: flex-start; padding-left: 72px; /* with .main's 24px: one inch from the list */ gap: .45em; font-size: 32pt; font-weight: 650; line-height: 1.15; color: var(--ink); }
 .empty.pick::before {
   content: ""; flex: none; width: 1.5em; height: 1em; background: var(--hint);
   clip-path: polygon(0 50%, 42% 0, 42% 30%, 100% 30%, 100% 70%, 42% 70%, 42% 100%);
